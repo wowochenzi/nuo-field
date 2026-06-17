@@ -1,3 +1,15 @@
+@font-face {
+  font-family: "HYFangSongS";
+  src: url("../assets/fonts/HYFangSongS.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SJzhuosong";
+  src: url("../assets/fonts/SanJiZhuoSongTi-2.ttf") format("truetype");
+  font-display: swap;
+}
+
 :root {
   --color-bg-primary: #060606;
   --color-bg-secondary: #0c0b09;
