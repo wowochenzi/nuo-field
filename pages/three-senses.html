@@ -1,0 +1,65 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>傩场 NuoField | 三感入傩</title>
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/effects.css" />
+    <link rel="stylesheet" href="../css/pages.css" />
+  </head>
+  <body data-root=".." data-page="three-senses">
+    <canvas id="particleCanvas" class="particle-canvas" aria-hidden="true"></canvas>
+    <img class="senses-page-bg" src="../assets/images/three-senses/figma-senses-bg-296-240.png" alt="" aria-hidden="true" />
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="../home.html"><span class="brand-mark"></span><span>傩场</span></a>
+        <nav class="site-nav" aria-label="主流程导航">
+          <a href="origin.html" data-route="origin">溯源</a><a href="three-senses.html" data-route="three-senses">三感</a><a href="masks.html" data-route="masks">诸神</a><a href="choose-mask.html" data-route="choose-mask">择面</a><a href="craft-mask.html" data-route="craft-mask">制面</a><a href="wear-mask.html" data-route="wear-mask">戴面</a><a href="gestures.html" data-route="gestures">手诀</a><a href="instruments.html" data-route="instruments">法器</a><a href="music.html" data-route="music">傩乐</a><a href="summary.html" data-route="summary">传承</a>
+        </nav>
+      </header>
+      <main class="page-main">
+        <section class="senses-stage" aria-label="形、动、声三感入傩">
+          <div class="senses-figma-canvas">
+            <div class="senses-flow-figma" aria-hidden="true">
+              <img class="senses-flow-img senses-flow-main" src="../assets/images/three-senses/flow-ring.svg" alt="" />
+              <img class="senses-flow-img senses-flow-echo" src="../assets/images/three-senses/flow-ring.svg" alt="" />
+            </div>
+
+            <a class="sense-frame sense-frame-form" href="masks.html" aria-label="进入面中诸神页面" title="点击进入面中诸神">
+              <span class="sense-form-glow" aria-hidden="true"></span>
+              <span class="sense-copy sense-copy-form">
+                <img class="sense-copy-bg" src="../assets/images/three-senses/frame-form-bg.png" alt="" />
+                <span class="sense-copy-text">从地域、神格、五官与纹样进入八相傩面，辨认每一副面具背后的角色秩序。</span>
+              </span>
+              <span class="sense-glyph sense-glyph-form" aria-hidden="true"><img class="sense-component-shot" src="../assets/images/three-senses/frame-form-glyph-figma.png" alt="" /></span>
+              <span class="sense-label sense-label-form sense-label-vertical"><img class="sense-component-shot" src="../assets/images/three-senses/frame-form-label-figma.png" alt="" /></span>
+            </a>
+
+            <article class="sense-frame sense-frame-motion" aria-label="以动入仪">
+              <span class="sense-glyph sense-glyph-motion" aria-hidden="true"><img class="sense-component-shot" src="../assets/images/three-senses/frame-motion-glyph-figma.png" alt="" /></span>
+              <span class="sense-label sense-label-motion"><img class="sense-component-shot" src="../assets/images/three-senses/frame-motion-label-figma.png" alt="" /></span>
+              <span class="sense-copy sense-copy-motion">
+                <img class="sense-copy-bg" src="../assets/images/three-senses/frame-motion-bg.png" alt="" />
+                <span class="sense-copy-text">制作、佩戴、手诀与法器动作把静态面具变成仪式中的身体经验。</span>
+              </span>
+            </article>
+
+            <article class="sense-frame sense-frame-sound" aria-label="以声入场">
+              <span class="sense-glyph sense-glyph-sound" aria-hidden="true"><img class="sense-component-shot" src="../assets/images/three-senses/frame-sound-glyph-figma.png" alt="" /></span>
+              <span class="sense-label sense-label-sound sense-label-vertical"><img class="sense-component-shot" src="../assets/images/three-senses/frame-sound-label-figma.png" alt="" /></span>
+              <span class="sense-copy sense-copy-sound">
+                <img class="sense-copy-bg" src="../assets/images/three-senses/frame-sound-bg.png" alt="" />
+                <span class="sense-copy-text">鼓、锣、唢呐、钹构成节奏线索，让页面体验从观看转向进入声场。</span>
+              </span>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+    <button class="audio-toggle" type="button" aria-label="背景音乐开关">乐</button>
+    <script src="../js/data.js"></script><script src="../js/state.js"></script><script src="../js/router.js"></script><script src="../js/audio.js"></script><script src="../js/cursor-particles.js"></script><script src="../js/app.js"></script><script src="../js/page-three-senses.js"></script>
+  </body>
+</html>
+

@@ -1,0 +1,93 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>傩场 NuoField | 匠作成面</title>
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/effects.css" />
+    <link rel="stylesheet" href="../css/pages.css" />
+    <link rel="stylesheet" href="craft-mask-demo.css" />
+  </head>
+  <body data-root=".." data-page="craft-mask">
+    <div class="craft-figma-bg" aria-hidden="true">
+      <img class="craft-figma-bg-image" src="../assets/images/craft-demo/figma-craft-layout-bg.png" alt="" />
+    </div>
+
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="../home.html"><span class="brand-mark"></span><span>傩场</span></a>
+        <nav class="site-nav" id="siteFlowNav" aria-label="主流程导航">
+          <a href="origin.html" data-route="origin">溯源</a>
+          <a href="three-senses.html" data-route="three-senses">三感</a>
+          <a href="masks.html" data-route="masks">诸神</a>
+          <a href="choose-mask.html" data-route="choose-mask">择面</a>
+          <a href="craft-mask.html" data-route="craft-mask" class="is-active">制面</a>
+          <a href="wear-mask.html" data-route="wear-mask">戴面</a>
+          <a href="gestures.html" data-route="gestures">手诀</a>
+          <a href="instruments.html" data-route="instruments">法器</a>
+          <a href="music.html" data-route="music">傩乐</a>
+          <a href="summary.html" data-route="summary">传承</a>
+        </nav>
+      </header>
+
+      <main class="page-main craft-page">
+        <div class="page-title-row">
+          <div><h1>匠作成面</h1></div>
+        </div>
+
+        <section class="main-layout" aria-label="傩面具制作交互体验">
+        <aside class="left-panel">
+          <section class="step-overview panel-frame" aria-labelledby="stepOverviewTitle">
+            <h2 id="stepOverviewTitle" class="panel-title">步骤总览</h2>
+            <ol class="step-grid" id="stepGrid"></ol>
+          </section>
+
+          <section class="current-step-card panel-frame" id="currentStepCard" aria-live="polite">
+            <div class="current-step-head">
+              <div class="current-step-icon" id="currentStepIcon" aria-hidden="true"></div>
+              <h2 class="current-step-title" id="currentStepTitle"></h2>
+            </div>
+            <p class="current-step-desc" id="currentStepDesc"></p>
+          </section>
+        </aside>
+
+        <section class="workspace" id="workspace" tabindex="0" aria-label="中心制作区域">
+          <div class="workspace-inner" id="workspaceInner">
+            <img
+              id="workspaceImage"
+              class="workspace-image"
+              src="../assets/images/craft-demo/workspace-initial.png"
+              alt="傩面具制作状态"
+            />
+          </div>
+          <div class="drop-cue" aria-hidden="true">置入工具</div>
+        </section>
+
+        <aside class="tool-panel" id="toolPanel" aria-label="工具提示">
+          <h2 class="panel-title tool-title">工具提示</h2>
+          <div class="tool-list" id="toolList"></div>
+        </aside>
+      </section>
+
+      <footer class="bottom-hint" id="bottomHint" aria-live="polite">
+        <span class="hint-label">步骤提示</span>
+        <span class="hint-text" id="hintText"></span>
+      </footer>
+    </main>
+    </div>
+
+    <div class="drag-ghost" id="dragGhost" aria-hidden="true"></div>
+
+    <button class="audio-toggle" type="button" aria-label="背景音乐开关">乐</button>
+    <script src="../js/data.js"></script>
+    <script src="../js/state.js"></script>
+    <script src="../js/router.js"></script>
+    <script src="../js/audio.js"></script>
+    <script src="../js/cursor-particles.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/page-craft-mask.js"></script>
+  </body>
+</html>
+

@@ -1,0 +1,91 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>傩场 NuoField | 开山莽将</title>
+    <link rel="stylesheet" href="../css/base.css" /><link rel="stylesheet" href="../css/layout.css" /><link rel="stylesheet" href="../css/effects.css" /><link rel="stylesheet" href="../css/pages.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "../assets/vendor/three/three.module.js",
+          "three/addons/": "../assets/vendor/three/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body data-root=".." data-page="kaishan-detail">
+    <div class="kaishan-detail-bg" aria-hidden="true">
+      <img class="kaishan-detail-scroll" src="../assets/images/choose-bg/figma-scroll-bg.png" alt="" />
+      <img class="kaishan-cloud kaishan-cloud-10" src="../assets/images/choose-bg/cloud-10.svg" alt="" />
+      <img class="kaishan-cloud kaishan-cloud-09" src="../assets/images/choose-bg/cloud-09.svg" alt="" />
+      <img class="kaishan-cloud kaishan-cloud-08" src="../assets/images/choose-bg/cloud-08.svg" alt="" />
+      <img class="kaishan-cloud kaishan-cloud-07" src="../assets/images/choose-bg/cloud-07.svg" alt="" />
+      <img class="kaishan-cloud kaishan-cloud-06" src="../assets/images/choose-bg/cloud-06.svg" alt="" />
+      <img class="kaishan-cloud kaishan-cloud-05" src="../assets/images/choose-bg/cloud-05.svg" alt="" />
+      <img class="kaishan-cloud kaishan-cloud-04" src="../assets/images/choose-bg/cloud-04.svg" alt="" />
+      <img class="kaishan-cloud kaishan-cloud-03" src="../assets/images/choose-bg/cloud-03.svg" alt="" />
+      <img class="kaishan-cloud kaishan-cloud-02" src="../assets/images/choose-bg/cloud-02.svg" alt="" />
+      <img class="kaishan-cloud kaishan-cloud-01" src="../assets/images/choose-bg/cloud-01.svg" alt="" />
+    </div>
+
+    <main class="kaishan-detail-page" aria-label="开山莽将面具信息">
+      <section class="kaishan-model-panel" aria-label="开山莽将粒子模型">
+        <canvas id="kaishanDetailCanvas" class="kaishan-detail-canvas" aria-hidden="true"></canvas>
+      </section>
+
+      <section class="kaishan-callouts" aria-label="面具结构标注">
+        <article class="kaishan-callout callout-horns">
+          <img src="../assets/images/kaishan-detail/group-102.svg" alt="" />
+          <div class="kaishan-callout-copy">
+            <h2>头冠与犄角</h2>
+            <p>面具顶部设双角与横向头冠，形成向上伸展的威猛轮廓。双角强化神将的非人化特征，象征震慑、镇邪与开山辟路的神力。</p>
+          </div>
+        </article>
+        <article class="kaishan-callout callout-forehead">
+          <img src="../assets/images/kaishan-detail/group-103.svg" alt="" />
+          <div class="kaishan-callout-copy">
+            <h2>额饰纹样</h2>
+            <p>额部以卷云、火焰与点状纹样组合，纹样集中于面具上方视觉中心，增强神灵威严感。其繁密装饰表现傩面具古拙、神秘而具有仪式性的审美特征。</p>
+          </div>
+        </article>
+        <article class="kaishan-callout callout-cheek">
+          <img src="../assets/images/kaishan-detail/group-101.svg" alt="" />
+          <div class="kaishan-callout-copy">
+            <h2>面颊纹样</h2>
+            <p>面颊两侧分布大量红色点状纹与卷曲纹饰，形成左右对称的装饰结构。密集纹样既丰富面部层次，也突出傩面具夸张、强烈的视觉张力。</p>
+          </div>
+        </article>
+        <article class="kaishan-callout callout-mouth">
+          <img src="../assets/images/kaishan-detail/group-104.svg" alt="" />
+          <div class="kaishan-callout-copy">
+            <h2>獠牙与口部</h2>
+            <p>口部横向张开，露出牙齿与獠牙。獠牙是威猛神将的重要特征，象征以凶制凶、驱逐妖邪的力量；夸张口部也增强了面具的震慑性。</p>
+          </div>
+        </article>
+      </section>
+
+      <aside class="kaishan-info-panel" aria-label="开山莽将文字信息">
+        <header>
+          <h1>开山莽将</h1>
+          <p>KAI SHAN MANG JIANG</p>
+          <strong>贵州傩堂戏</strong>
+        </header>
+        <div class="kaishan-info-body">
+          <p>开山莽将，又称“开山猛将”，是贵州、湘西一带傩堂戏中极具代表性的威猛神将形象。相关资料记载，他通常被塑造成“头生双角、满口獠牙、眼球凸出”的凶神面貌，手执金光钺斧，专门砍杀五方邪魔，并为人们追回失去的魂魄。中央美术学院非遗研究资料也提到，开山莽将一般被安排在傩堂戏下半坛出场，属于“凶神”系列，但其凶恶外形并不代表恶，而是以勇猛凶悍的神力扶弱惩强、扫除妖邪。</p>
+          <p>因此，开山莽将的寓意集中在驱邪逐疫、开山辟路、镇压凶祟。他的红角、獠牙、怒目和武器共同构成一种强烈的威慑感，象征傩仪中“以凶制凶”的力量。它不是单纯恐怖的面具，而是民间信仰中保护村寨、驱除不祥、维持仪式秩序的镇妖猛将。</p>
+        </div>
+        <section class="kaishan-color-row" aria-label="主要颜色">
+          <h2>主要颜色</h2>
+          <img src="../assets/images/kaishan-detail/color-swatches.svg" alt="" />
+        </section>
+      </aside>
+
+      <a class="kaishan-back" href="choose-mask.html">返回</a>
+    </main>
+
+    <button class="audio-toggle" type="button" aria-label="背景音乐开关">乐</button>
+    <script src="../js/data.js"></script><script src="../js/router.js"></script><script src="../js/audio.js"></script><script>NuoAudio.initBackground();</script><script type="module" src="../js/page-kaishan-detail.js?v=20260609"></script>
+  </body>
+</html>
+

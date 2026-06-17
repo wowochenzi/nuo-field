@@ -1,0 +1,1631 @@
+:root {
+  --ink: #020202;
+  --gold: #d8b36a;
+  --gold-soft: rgba(226, 200, 137, 0.95);
+  --gold-line: rgba(214, 178, 105, 0.18);
+  --panel: rgba(12, 9, 7, 0.62);
+  --panel-lit: rgba(160, 42, 28, 0.42);
+  --red: #8d1c14;
+  --red-dark: #5c110f;
+  --shadow: 0 32px 27px rgba(0, 0, 0, 0.92);
+  --font-title: "Huiwen-mincho", "STSong", "SimSun", serif;
+  --font-body: "HYFangSongS", "FangSong", "STFangsong", serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #000;
+  color: var(--gold);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(160, 110, 45, 0.08), transparent 32%),
+    radial-gradient(circle at 18% 72%, rgba(90, 28, 18, 0.08), transparent 36%),
+    radial-gradient(circle at 82% 18%, rgba(180, 130, 70, 0.055), transparent 30%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.86));
+  mix-blend-mode: screen;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  background-image:
+    linear-gradient(90deg, transparent 0 47%, rgba(216, 179, 106, 0.28) 48% 50%, transparent 51% 100%),
+    linear-gradient(0deg, transparent 0 47%, rgba(216, 179, 106, 0.16) 48% 50%, transparent 51% 100%);
+  background-size: 168px 168px;
+  mask-image: radial-gradient(circle at 50% 42%, black, transparent 68%);
+}
+
+body[data-page="craft-mask"]::before,
+body[data-page="craft-mask"]::after,
+body[data-page="craft-mask"] > .particle-canvas,
+body[data-page="craft-mask"] #particle-bg {
+  display: none !important;
+}
+
+.craft-figma-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #000;
+}
+
+.craft-figma-bg img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+}
+
+.craft-figma-bg-image {
+  opacity: 1;
+}
+
+.craft-figma-bg-overlay {
+  display: none;
+  opacity: 0.2;
+  mix-blend-mode: lighten;
+}
+
+body[data-page="craft-mask"] .site-shell {
+  position: relative;
+  z-index: 1;
+}
+
+body[data-page="craft-mask"] .craft-page {
+  position: relative;
+  z-index: 1;
+  min-height: calc(100vh - 72px);
+  padding-top: clamp(22px, 3.4vh, 34px);
+  padding-bottom: clamp(14px, 2vh, 22px);
+  display: flex;
+  flex-direction: column;
+}
+
+body[data-page="craft-mask"] .page-title-row {
+  margin-bottom: clamp(26px, 3.1vh, 34px);
+}
+
+#particle-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(116, 70, 33, 0.26), transparent 38%),
+    radial-gradient(circle at 20% 78%, rgba(92, 36, 22, 0.16), transparent 32%),
+    linear-gradient(135deg, #060403, #020202 54%, #000);
+}
+
+#particle-bg::before,
+#particle-bg::after {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  pointer-events: none;
+}
+
+#particle-bg::before {
+  opacity: 0.52;
+  background:
+    radial-gradient(ellipse at 26% 30%, rgba(216, 179, 106, 0.24), transparent 26%),
+    radial-gradient(ellipse at 74% 66%, rgba(184, 145, 79, 0.2), transparent 30%),
+    linear-gradient(118deg, transparent 10%, rgba(216, 179, 106, 0.2) 28%, transparent 46%),
+    linear-gradient(302deg, transparent 18%, rgba(143, 106, 56, 0.17) 38%, transparent 58%);
+  filter: blur(18px);
+  animation: sandBandDrift 28s ease-in-out infinite alternate;
+}
+
+#particle-bg::after {
+  opacity: 0.42;
+  background-image:
+    radial-gradient(circle, rgba(236, 205, 142, 0.72) 0 0.9px, transparent 1.45px),
+    radial-gradient(circle, rgba(184, 145, 79, 0.56) 0 0.85px, transparent 1.35px),
+    radial-gradient(circle, rgba(108, 74, 45, 0.46) 0 0.7px, transparent 1.2px);
+  background-size: 30px 30px, 49px 49px, 71px 71px;
+  background-position: 0 0, 18px 22px;
+  mask-image:
+    radial-gradient(ellipse at 50% 46%, transparent 0 18%, black 28%, black 82%, transparent 100%),
+    linear-gradient(118deg, transparent 4%, black 18%, black 82%, transparent 96%);
+  mix-blend-mode: screen;
+  animation: dustVeilDrift 36s linear infinite;
+}
+
+#particle-bg canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+#particle-bg .sand-trail-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+button {
+  font: inherit;
+}
+
+.page {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: transparent;
+}
+
+.header {
+  width: 100%;
+  height: 94px;
+  padding: 25px 33px 0;
+  display: grid;
+  grid-template-columns: 55px 1fr auto 20px;
+  align-items: start;
+  border-bottom: 1px solid rgba(214, 178, 105, 0.12);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.18));
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.28);
+}
+
+.craft-nav-toggle {
+  width: 78px;
+  height: 38px;
+  border: 1px solid rgba(214, 178, 105, 0.42);
+  border-radius: 8px;
+  background: rgba(8, 6, 5, 0.72);
+  color: var(--gold);
+  cursor: pointer;
+  box-shadow: inset 0 0 18px rgba(214, 178, 105, 0.06);
+}
+
+.craft-nav-toggle:hover,
+body.is-craft-nav-open .craft-nav-toggle {
+  border-color: rgba(229, 206, 173, 0.72);
+  box-shadow: 0 0 20px rgba(216, 179, 106, 0.18);
+}
+
+.craft-flow-nav {
+  position: fixed;
+  right: 141px;
+  top: 47px;
+  z-index: 30;
+  width: max-content;
+  max-width: calc(100vw - 36px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 4px;
+  border: 1px solid rgba(214, 178, 105, 0.28);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(216, 160, 74, 0.1), transparent 58%),
+    rgba(5, 4, 3, 0.66);
+  box-shadow: 0 22px 42px rgba(0, 0, 0, 0.46), 0 0 24px rgba(216, 179, 106, 0.16);
+  backdrop-filter: blur(18px);
+  opacity: 0;
+  transform: translateY(-50%) translateX(8px);
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+body.is-craft-nav-open .craft-flow-nav {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+  pointer-events: auto;
+}
+
+.craft-flow-nav a {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 54px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: rgba(226, 200, 137, 0.72);
+  text-decoration: none;
+}
+
+.craft-flow-nav a:hover,
+.craft-flow-nav a.is-active {
+  color: #f1dcb6;
+  border-color: rgba(214, 178, 105, 0.34);
+  background: rgba(58, 43, 32, 0.5);
+}
+
+.back-button {
+  width: 55px;
+  height: 30px;
+  border: 1px solid rgba(214, 178, 105, 0.2);
+  border-radius: 6px;
+  background: rgba(8, 6, 5, 0.66);
+  color: var(--gold);
+  text-align: center;
+  text-shadow: 0 0 8px rgba(216, 179, 106, 0.22);
+  cursor: pointer;
+  box-shadow: inset 0 0 12px rgba(214, 178, 105, 0.04);
+}
+
+.back-button:focus-visible,
+.tool-button:focus-visible,
+.workspace:focus-visible {
+  outline: 2px solid rgba(229, 206, 173, 0.86);
+  outline-offset: 3px;
+}
+
+.page-title {
+  margin: -5px 0 0;
+  font-family: var(--font-title);
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 49px;
+  text-align: center;
+  color: var(--gold);
+  text-shadow: 0 0 12px rgba(214, 178, 105, 0.22);
+  letter-spacing: 0;
+}
+
+.main-layout {
+  width: 100%;
+  min-height: auto;
+  padding: 0 clamp(36px, 4vw, 56px) clamp(8px, 1.2vh, 12px);
+  display: grid;
+  grid-template-columns: 285px minmax(520px, 560px) 284px;
+  justify-content: space-between;
+  align-items: start;
+  gap: clamp(52px, 5vw, 76px);
+  position: relative;
+  overflow: visible;
+  background: transparent;
+}
+
+.main-layout::before {
+  content: none;
+}
+
+.left-panel {
+  height: 508px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  gap: 10px;
+  transform: translateX(-28px);
+}
+
+.panel-frame {
+  position: relative;
+  padding: 23px 14px 20px;
+  background: var(--panel);
+  border: 1px solid var(--gold-line);
+  border-radius: 6px;
+  box-shadow:
+    0 0 28px rgba(0, 0, 0, 0.45),
+    inset 0 0 18px rgba(214, 178, 105, 0.035);
+  backdrop-filter: blur(10px);
+}
+
+.panel-frame::before,
+.tool-panel::before,
+.bottom-hint::before {
+  content: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+.panel-frame > *,
+.tool-panel > *,
+.bottom-hint > * {
+  position: relative;
+  z-index: 2;
+}
+
+.panel-title {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 26px;
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(216, 179, 106, 0.2);
+}
+
+.step-overview {
+  min-height: 252px;
+}
+
+.step-overview .panel-title {
+  padding-left: 8px;
+  margin-bottom: 16px;
+}
+
+.step-grid {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  width: 236px;
+  display: grid;
+  grid-template-columns: repeat(3, 64px);
+  column-gap: 22px;
+  row-gap: 12px;
+}
+
+.step-item {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  color: var(--gold-soft);
+  font-size: 18px;
+  line-height: 20px;
+  transition: transform 260ms ease, color 260ms ease, filter 260ms ease;
+}
+
+.step-item.is-active {
+  transform: translateY(-2px);
+  color: #f1dcb6;
+  filter: drop-shadow(0 0 6px rgba(229, 206, 173, 0.62));
+}
+
+.current-step-icon {
+  background-image: url("../assets/images/craft-demo/step-sprite.png");
+  background-repeat: no-repeat;
+}
+
+.step-icon {
+  width: 60px;
+  aspect-ratio: 482 / 453;
+  display: block;
+  object-fit: contain;
+}
+
+.current-step-card {
+  min-height: 246px;
+  padding: 22px 28px 18px;
+  transition: opacity 320ms ease, transform 320ms ease;
+}
+
+.current-step-card.is-fading {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.current-step-card.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(8px);
+}
+
+.current-step-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin: 11px 0 20px;
+}
+
+.current-step-icon {
+  width: 81px;
+  height: 81px;
+  border-radius: 50%;
+  border: 1px solid rgba(232, 188, 108, 0.3);
+  background-color: #661713;
+  background-image:
+    url("../assets/images/craft-demo/step-sprite.png"),
+    radial-gradient(circle at center, rgba(160, 42, 28, 0.74), rgba(48, 18, 12, 0.82));
+  background-repeat: no-repeat, no-repeat;
+  background-size: 270% 252%, 100% 100%;
+  box-shadow:
+    0 0 18px rgba(188, 58, 36, 0.16),
+    0 0 22px rgba(218, 170, 90, 0.08),
+    0 4px 4px rgba(0, 0, 0, 0.25);
+  flex: 0 0 auto;
+}
+
+.current-step-icon.icon-draw {
+  background-position: 100% 0;
+}
+
+.current-step-icon.icon-carve {
+  background-position: 101% 81%;
+}
+
+.current-step-icon.icon-paint {
+  background-position: 50% 83%;
+}
+
+.current-step-icon.icon-polish,
+.current-step-icon.icon-complete {
+  background-position: -2% 87%;
+}
+
+.current-step-title {
+  margin: 0;
+  width: 145px;
+  font-family: var(--font-title);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 28px;
+  color: var(--gold);
+  text-shadow: 0 0 9px rgba(216, 179, 106, 0.2);
+  white-space: pre-line;
+}
+
+.current-step-desc {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--gold-soft);
+}
+
+.workspace {
+  position: relative;
+  width: min(100%, 560px);
+  height: 508px;
+  touch-action: none;
+}
+
+.workspace-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: visible;
+  isolation: isolate;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  filter: none;
+  transition: filter 240ms ease, transform 240ms ease;
+}
+
+.workspace-inner::before {
+  content: "";
+  position: absolute;
+  inset: 6% 4%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 48% 46%, rgba(216, 179, 106, 0.13), transparent 32%),
+    radial-gradient(circle at 57% 62%, rgba(128, 42, 24, 0.08), transparent 28%);
+  filter: blur(18px);
+}
+
+.workspace.is-over .workspace-inner {
+  filter: drop-shadow(0 0 16px rgba(229, 206, 173, 0.32));
+  transform: scale(1.012);
+}
+
+.workspace.is-complete .workspace-inner {
+  animation: completeGlow 1200ms ease both;
+}
+
+.workspace-image {
+  --workspace-x: 0px;
+  --workspace-y: 0px;
+  --workspace-scale-x: 1;
+  --workspace-scale-y: 1;
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: relative;
+  z-index: 1;
+  object-fit: contain;
+  transform: translate(var(--workspace-x), var(--workspace-y))
+    scaleX(var(--workspace-scale-x))
+    scaleY(var(--workspace-scale-y));
+  transition: opacity 700ms ease, transform 300ms ease;
+}
+
+.workspace-image-next {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.workspace-image-next.is-visible {
+  opacity: 1;
+}
+
+.workspace-image.is-crossfading-out {
+  opacity: 0;
+}
+
+.workspace-image.is-swap-settling {
+  transition: none;
+}
+
+.workspace-image.is-slow-transition {
+  transition: opacity 4000ms ease, transform 300ms ease;
+}
+
+.workspace-image.is-carve-transition {
+  transition: opacity 4000ms linear, transform 300ms ease;
+}
+
+.workspace-image.is-polish-transition {
+  transition: opacity 3000ms ease, transform 300ms ease;
+}
+
+.workspace-image.is-carve-shake {
+  animation: craftCarveSoftShake 4000ms steps(2, end) both;
+}
+
+.workspace-image.is-video-transitioning {
+  opacity: 0.42;
+  transition: opacity 260ms ease;
+}
+
+@keyframes craftCarveSoftShake {
+  0%,
+  100% { translate: 0 0; }
+  12% { translate: -0.7px 0; }
+  24% { translate: 0.7px -0.5px; }
+  36% { translate: -0.5px 0.6px; }
+  48% { translate: 0.6px 0; }
+  60% { translate: -0.6px -0.5px; }
+  72% { translate: 0.5px 0.5px; }
+  84% { translate: -0.4px 0; }
+}
+
+.workspace-transition-video,
+.workspace-transition-canvas {
+  --video-x: 0px;
+  --video-y: 0px;
+  --video-scale: 1;
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  pointer-events: none;
+  opacity: 0;
+  background: transparent;
+  transform: translate(var(--video-x), var(--video-y))
+    scale(var(--video-scale));
+  transition: opacity 160ms ease;
+}
+
+.workspace-transition-video {
+  visibility: hidden;
+}
+
+.workspace-transition-video.is-visible {
+  visibility: visible;
+  mix-blend-mode: screen;
+}
+
+.workspace-transition-canvas {
+  filter: brightness(1.02) contrast(1.04);
+}
+
+.workspace-transition-video.is-visible,
+.workspace-transition-canvas.is-visible {
+  opacity: 1;
+}
+
+.workspace-transition-canvas[data-stage="draw"],
+.workspace-transition-video[data-stage="draw"] {
+  --video-x: -5px;
+  --video-y: -35px;
+  --video-scale: 1;
+}
+
+.workspace-image[data-stage="initial"] {
+  --workspace-x: 0px;
+  --workspace-y: 0px;
+  --workspace-scale-x: 1; /* 横向变宽 */
+  --workspace-scale-y: 1; /* 纵向变矮 */
+}
+
+.workspace-image[data-stage="draw"] {
+  --workspace-x: 0px;
+  --workspace-y: 0px;
+  --workspace-scale-x: 1; /* 横向变宽 */
+  --workspace-scale-y: 1; /* 纵向变矮 */
+}
+
+.workspace-image[data-stage="carveProgress"] {
+  --workspace-x: 0px;
+  --workspace-y: 0px;
+  --workspace-scale-x: 1; /* 横向变宽 */
+  --workspace-scale-y: 1; /* 纵向变矮 */
+}
+
+.workspace-image[data-stage="carved"] {
+  --workspace-x: 0px;
+  --workspace-y: 0px;
+  --workspace-scale-x: 0.95; /* 横向变宽 */
+  --workspace-scale-y: 1; /* 纵向变矮 */
+}
+
+.workspace-image[data-stage="painted"] {
+  --workspace-x: -9px;
+  --workspace-y: 0px;
+  --workspace-scale-x: 1; /* 横向变宽 */
+  --workspace-scale-y: 1; /* 纵向变矮 */
+}
+
+.workspace-image[data-stage="polished"] {
+  --workspace-x: 0px;
+  --workspace-y: 0px;
+  --workspace-scale-x: 1; /* 横向变宽 */
+  --workspace-scale-y: 1; /* 纵向变矮 */
+}
+
+/* Per-mask workshop image tuning.
+   Edit these variables to adjust each mask at each craft stage:
+   --workspace-x moves left/right, --workspace-y moves up/down,
+   --workspace-scale-x changes width, --workspace-scale-y changes height. */
+body[data-mask-id="guizhou-kaishan-mangjiang"] .workspace-image[data-stage="initial"],
+body[data-mask-id="guizhou-kaishan-mangjiang"] .workspace-image[data-stage="draw"],
+body[data-mask-id="guizhou-kaishan-mangjiang"] .workspace-image[data-stage="carveProgress"],
+body[data-mask-id="guizhou-kaishan-mangjiang"] .workspace-image[data-stage="carved"],
+body[data-mask-id="guizhou-kaishan-mangjiang"] .workspace-image[data-stage="painted"],
+body[data-mask-id="guizhou-kaishan-mangjiang"] .workspace-image[data-stage="polished"] {
+  /* 开山莽将 uses the demo defaults above. */
+}
+
+body[data-mask-id="guizhou-xianfeng-xiaojie"] .workspace-image[data-stage="initial"] { --workspace-x: 0px; --workspace-y: 8px; --workspace-scale-x: 0.92; --workspace-scale-y: 0.92; }
+body[data-mask-id="guizhou-xianfeng-xiaojie"] .workspace-image[data-stage="draw"] { --workspace-x: 0px; --workspace-y: 6px; --workspace-scale-x: 0.94; --workspace-scale-y: 0.94; }
+body[data-mask-id="guizhou-xianfeng-xiaojie"] .workspace-image[data-stage="carveProgress"] { --workspace-x: 0px; --workspace-y: 4px; --workspace-scale-x: 0.96; --workspace-scale-y: 0.96; }
+body[data-mask-id="guizhou-xianfeng-xiaojie"] .workspace-image[data-stage="carved"] { --workspace-x: 0px; --workspace-y: 2px; --workspace-scale-x: 0.98; --workspace-scale-y: 0.98; }
+body[data-mask-id="guizhou-xianfeng-xiaojie"] .workspace-image[data-stage="painted"] { --workspace-x: -2px; --workspace-y: 0px; --workspace-scale-x: 1; --workspace-scale-y: 1; }
+body[data-mask-id="guizhou-xianfeng-xiaojie"] .workspace-image[data-stage="polished"] { --workspace-x: -2px; --workspace-y: 0px; --workspace-scale-x: 1.02; --workspace-scale-y: 1.02; }
+
+body[data-mask-id="guizhou-huoshen-lingguan"] .workspace-image[data-stage="initial"] { --workspace-x: 0px; --workspace-y: 12px; --workspace-scale-x: 0.9; --workspace-scale-y: 0.9; }
+body[data-mask-id="guizhou-huoshen-lingguan"] .workspace-image[data-stage="draw"] { --workspace-x: 0px; --workspace-y: 8px; --workspace-scale-x: 0.94; --workspace-scale-y: 0.94; }
+body[data-mask-id="guizhou-huoshen-lingguan"] .workspace-image[data-stage="carveProgress"] { --workspace-x: 0px; --workspace-y: 5px; --workspace-scale-x: 0.98; --workspace-scale-y: 0.98; }
+body[data-mask-id="guizhou-huoshen-lingguan"] .workspace-image[data-stage="carved"] { --workspace-x: 0px; --workspace-y: 2px; --workspace-scale-x: 1; --workspace-scale-y: 1; }
+body[data-mask-id="guizhou-huoshen-lingguan"] .workspace-image[data-stage="painted"] { --workspace-x: -4px; --workspace-y: 0px; --workspace-scale-x: 1.02; --workspace-scale-y: 1.02; }
+body[data-mask-id="guizhou-huoshen-lingguan"] .workspace-image[data-stage="polished"] { --workspace-x: -4px; --workspace-y: 0px; --workspace-scale-x: 1.04; --workspace-scale-y: 1.04; }
+
+body[data-mask-id="jiangxi-leigong"] .workspace-image[data-stage="initial"] { --workspace-x: 0px; --workspace-y: 10px; --workspace-scale-x: 0.88; --workspace-scale-y: 0.88; }
+body[data-mask-id="jiangxi-leigong"] .workspace-image[data-stage="draw"] { --workspace-x: 0px; --workspace-y: 7px; --workspace-scale-x: 0.92; --workspace-scale-y: 0.92; }
+body[data-mask-id="jiangxi-leigong"] .workspace-image[data-stage="carveProgress"] { --workspace-x: 0px; --workspace-y: 4px; --workspace-scale-x: 0.96; --workspace-scale-y: 0.96; }
+body[data-mask-id="jiangxi-leigong"] .workspace-image[data-stage="carved"] { --workspace-x: 0px; --workspace-y: 2px; --workspace-scale-x: 1; --workspace-scale-y: 1; }
+body[data-mask-id="jiangxi-leigong"] .workspace-image[data-stage="painted"] { --workspace-x: -5px; --workspace-y: 0px; --workspace-scale-x: 1.04; --workspace-scale-y: 1.04; }
+body[data-mask-id="jiangxi-leigong"] .workspace-image[data-stage="polished"] { --workspace-x: -5px; --workspace-y: 0px; --workspace-scale-x: 1.06; --workspace-scale-y: 1.06; }
+
+body[data-mask-id="jiangxi-yinjiao"] .workspace-image[data-stage="initial"] { --workspace-x: 0px; --workspace-y: 9px; --workspace-scale-x: 0.9; --workspace-scale-y: 0.9; }
+body[data-mask-id="jiangxi-yinjiao"] .workspace-image[data-stage="draw"] { --workspace-x: 0px; --workspace-y: 6px; --workspace-scale-x: 0.94; --workspace-scale-y: 0.94; }
+body[data-mask-id="jiangxi-yinjiao"] .workspace-image[data-stage="carveProgress"] { --workspace-x: 0px; --workspace-y: 4px; --workspace-scale-x: 0.98; --workspace-scale-y: 0.98; }
+body[data-mask-id="jiangxi-yinjiao"] .workspace-image[data-stage="carved"] { --workspace-x: 0px; --workspace-y: 2px; --workspace-scale-x: 1; --workspace-scale-y: 1; }
+body[data-mask-id="jiangxi-yinjiao"] .workspace-image[data-stage="painted"] { --workspace-x: -3px; --workspace-y: 0px; --workspace-scale-x: 1.02; --workspace-scale-y: 1.02; }
+body[data-mask-id="jiangxi-yinjiao"] .workspace-image[data-stage="polished"] { --workspace-x: -3px; --workspace-y: 0px; --workspace-scale-x: 1.04; --workspace-scale-y: 1.04; }
+
+body[data-mask-id="hubei-chenghuang-tudi"] .workspace-image[data-stage="initial"] { --workspace-x: 0px; --workspace-y: 10px; --workspace-scale-x: 1; --workspace-scale-y: 1; }
+body[data-mask-id="hubei-chenghuang-tudi"] .workspace-image[data-stage="draw"] { --workspace-x: 0px; --workspace-y: 7px; --workspace-scale-x: 1; --workspace-scale-y: 1; }
+body[data-mask-id="hubei-chenghuang-tudi"] .workspace-image[data-stage="carveProgress"] { --workspace-x: 0px; --workspace-y: 4px; --workspace-scale-x: 0.86; --workspace-scale-y: 0.86; }
+body[data-mask-id="hubei-chenghuang-tudi"] .workspace-image[data-stage="carved"] { --workspace-x: 0px; --workspace-y: 2px; --workspace-scale-x: 0.90; --workspace-scale-y: 0.82; }
+body[data-mask-id="hubei-chenghuang-tudi"] .workspace-image[data-stage="painted"] { --workspace-x: -4px; --workspace-y: 0px; --workspace-scale-x: 0.90; --workspace-scale-y: 0.84; }
+body[data-mask-id="hubei-chenghuang-tudi"] .workspace-image[data-stage="polished"] { --workspace-x: -4px; --workspace-y: -10px; --workspace-scale-x: 0.86; --workspace-scale-y: 0.82; }
+
+body[data-mask-id="zhejiang-liuchoupo"] .workspace-image[data-stage="initial"] { --workspace-x: 0px; --workspace-y: 8px; --workspace-scale-x: 0.92; --workspace-scale-y: 0.92; }
+body[data-mask-id="zhejiang-liuchoupo"] .workspace-image[data-stage="draw"] { --workspace-x: 0px; --workspace-y: 5px; --workspace-scale-x: 0.95; --workspace-scale-y: 0.95; }
+body[data-mask-id="zhejiang-liuchoupo"] .workspace-image[data-stage="carveProgress"] { --workspace-x: 0px; --workspace-y: 3px; --workspace-scale-x: 0.98; --workspace-scale-y: 0.98; }
+body[data-mask-id="zhejiang-liuchoupo"] .workspace-image[data-stage="carved"] { --workspace-x: 0px; --workspace-y: 1px; --workspace-scale-x: 1; --workspace-scale-y: 1; }
+body[data-mask-id="zhejiang-liuchoupo"] .workspace-image[data-stage="painted"] { --workspace-x: -2px; --workspace-y: 0px; --workspace-scale-x: 1.02; --workspace-scale-y: 1.02; }
+body[data-mask-id="zhejiang-liuchoupo"] .workspace-image[data-stage="polished"] { --workspace-x: -2px; --workspace-y: 0px; --workspace-scale-x: 1.04; --workspace-scale-y: 1.04; }
+
+body[data-mask-id="hebei-datou-heshang"] .workspace-image[data-stage="initial"] { --workspace-x: 0px; --workspace-y: 14px; --workspace-scale-x: 0.84; --workspace-scale-y: 0.84; }
+body[data-mask-id="hebei-datou-heshang"] .workspace-image[data-stage="draw"] { --workspace-x: 0px; --workspace-y: 10px; --workspace-scale-x: 0.88; --workspace-scale-y: 0.88; }
+body[data-mask-id="hebei-datou-heshang"] .workspace-image[data-stage="carveProgress"] { --workspace-x: 0px; --workspace-y: 7px; --workspace-scale-x: 0.92; --workspace-scale-y: 0.92; }
+body[data-mask-id="hebei-datou-heshang"] .workspace-image[data-stage="carved"] { --workspace-x: 0px; --workspace-y: 4px; --workspace-scale-x: 0.96; --workspace-scale-y: 0.96; }
+body[data-mask-id="hebei-datou-heshang"] .workspace-image[data-stage="painted"] { --workspace-x: -4px; --workspace-y: 1px; --workspace-scale-x: 1; --workspace-scale-y: 1; }
+body[data-mask-id="hebei-datou-heshang"] .workspace-image[data-stage="polished"] { --workspace-x: -4px; --workspace-y: 0px; --workspace-scale-x: 1.02; --workspace-scale-y: 1.02; }
+
+.workspace-image.is-fading {
+  opacity: 0;
+}
+
+.drop-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%) translateY(8px);
+  padding: 6px 14px;
+  border: 1px solid rgba(214, 178, 105, 0.24);
+  background: rgba(8, 6, 5, 0.74);
+  color: var(--gold);
+  font-family: var(--font-title);
+  font-size: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.workspace.is-over .drop-cue {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.tool-panel {
+  width: 284px;
+  height: 480px;
+  margin-top: 24px;
+  padding: 22px 17px 34px;
+  position: relative;
+  transform: translateX(28px);
+  background: var(--panel);
+  border: 1px solid var(--gold-line);
+  border-radius: 6px;
+  box-shadow:
+    0 0 28px rgba(0, 0, 0, 0.45),
+    inset 0 0 18px rgba(214, 178, 105, 0.035);
+  backdrop-filter: blur(10px);
+}
+
+.tool-panel::after {
+  content: none;
+}
+
+.tool-title {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.tool-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tool-button {
+  width: 100%;
+  min-height: 66px;
+  padding: 10px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgba(214, 178, 105, 0.14);
+  border-radius: 6px;
+  background: rgba(4, 3, 3, 0.38);
+  color: var(--gold);
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  transition:
+    min-height 220ms ease,
+    padding 220ms ease,
+    background 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    transform 220ms ease;
+}
+
+.tool-button.is-active {
+  min-height: 90px;
+  padding: 11px 25px 11px 27px;
+  background:
+    radial-gradient(circle at 28% 48%, rgba(230, 202, 150, 0.18), transparent 34%),
+    linear-gradient(180deg, rgba(229, 206, 173, 0.24), rgba(132, 94, 45, 0.18));
+  border-color: rgba(229, 206, 173, 0.58);
+  box-shadow:
+    inset 0 0 18px rgba(229, 206, 173, 0.16),
+    0 0 10px rgba(229, 206, 173, 0.16),
+    0 0 24px rgba(216, 179, 106, 0.1);
+  transform: scale(1.04);
+}
+
+.tool-button.is-disabled {
+  opacity: 0.72;
+}
+
+.tool-icon-wrap {
+  width: 59px;
+  height: 75px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  touch-action: none;
+}
+
+.tool-icon-wrap::before {
+  content: "";
+  width: 51px;
+  height: 51px;
+  border-radius: 50%;
+  border: 1px solid rgba(209, 172, 139, 0.45);
+  background:
+    radial-gradient(circle at 50% 42%, rgba(141, 28, 20, 0.95), rgba(52, 15, 12, 0.9));
+}
+
+.tool-button.is-active .tool-icon-wrap::before {
+  width: 59px;
+  height: 59px;
+  box-shadow:
+    inset 0 0 12px rgba(229, 206, 173, 0.12),
+    0 0 14px rgba(229, 206, 173, 0.24);
+}
+
+.tool-icon {
+  position: absolute;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
+  pointer-events: auto;
+  cursor: grab;
+  }
+
+.tool-icon:active {
+  cursor: grabbing;
+}
+
+.tool-icon.tool-pencil,
+.tool-icon.tool-knife,
+.tool-icon.tool-brush {
+  width: 29px;
+  height: 75px;
+}
+
+.tool-icon.tool-sandpaper {
+  width: 41px;
+  height: 60px;
+}
+
+.tool-name {
+  width: 111px;
+  font-family: var(--font-title);
+  font-size: 20px;
+  line-height: 1.2;
+  text-align: center;
+  text-shadow: 0 0 4px var(--gold-soft);
+  transition: font-size 220ms ease, color 220ms ease;
+}
+
+.tool-button.is-active .tool-name {
+  width: 133px;
+  font-size: 1.08em;
+  color: #f0d59a;
+}
+
+.bottom-hint {
+  width: min(490px, calc(100vw - 36px));
+  min-height: 65px;
+  margin: 18px auto 0;
+  padding: 12px 26px;
+  display: grid;
+  grid-template-columns: 106px 1fr;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  z-index: 2;
+  color: var(--gold);
+  font-family: var(--font-title);
+  text-shadow: 0 0 10px rgba(216, 179, 106, 0.2);
+  background: rgba(8, 6, 5, 0.72);
+  border: 1px solid rgba(214, 178, 105, 0.14);
+  border-radius: 6px;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+}
+
+.hint-label {
+  width: 107px;
+  min-height: 42px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at center, rgba(141, 28, 20, 0.78), rgba(45, 12, 10, 0.84));
+  border: 1px solid rgba(232, 188, 108, 0.22);
+  border-radius: 4px;
+  font-size: 20px;
+  padding-right: 8px;
+}
+
+.hint-text {
+  font-size: 18px;
+  line-height: 22px;
+  text-align: center;
+}
+
+.drag-ghost {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: auto;
+  min-height: 0;
+  display: none;
+  align-items: center;
+  padding: 0;
+  z-index: 20;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.drag-ghost.is-visible {
+  display: flex;
+}
+
+.tool-drag-image {
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.48));
+}
+
+.tool-drag-image.tool-pencil,
+.tool-drag-image.tool-knife,
+.tool-drag-image.tool-brush {
+  width: 34px;
+  height: 92px;
+}
+
+.tool-drag-image.tool-sandpaper {
+  width: 68px;
+  height: 92px;
+}
+
+.is-shaking {
+  animation: shake 360ms ease;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-7px);
+  }
+  40%,
+  80% {
+    transform: translateX(7px);
+  }
+}
+
+@keyframes completeGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 12px rgba(229, 206, 173, 0.16));
+  }
+  45% {
+    filter: drop-shadow(0 0 24px rgba(229, 206, 173, 0.36));
+  }
+}
+
+@keyframes sandBandDrift {
+  from {
+    transform: translate3d(-2%, 1%, 0) rotate(-1deg) scale(1);
+  }
+
+  to {
+    transform: translate3d(2%, -2%, 0) rotate(1.5deg) scale(1.04);
+  }
+}
+
+@keyframes dustVeilDrift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-44px, 28px, 0);
+  }
+}
+
+@media (max-width: 1180px) {
+  .main-layout {
+    grid-template-columns: minmax(210px, 255px) minmax(360px, 1fr) minmax(220px, 250px);
+    gap: 18px;
+    padding-inline: 28px;
+  }
+
+  .step-grid {
+    width: 240px;
+    grid-template-columns: repeat(3, 68px);
+    column-gap: 18px;
+    row-gap: 10px;
+  }
+
+  .step-icon {
+    width: 68px;
+  }
+
+  .tool-panel {
+    width: 250px;
+  }
+
+  .tool-button {
+    padding-inline: 20px;
+  }
+}
+
+@media (min-width: 901px) and (max-height: 800px) {
+  body[data-page="craft-mask"] .page-title-row {
+    margin-bottom: clamp(16px, 2vh, 22px);
+  }
+}
+
+@media (min-width: 1600px) and (max-width: 1899px) and (min-height: 850px) {
+  body[data-page="craft-mask"] .craft-page {
+    padding-top: 43px;
+    padding-bottom: 18px;
+  }
+
+  body[data-page="craft-mask"] .page-title-row {
+    margin-bottom: 55px;
+  }
+
+  .main-layout {
+    padding: 0 24px 0 0;
+    padding-bottom: 0;
+    grid-template-columns: 285px minmax(600px, 626px) 284px;
+    gap: clamp(150px, 10.9vw, 188px);
+  }
+
+  .left-panel {
+    height: 573px;
+    gap: 10px;
+    transform: translateX(-28px);
+  }
+
+  .panel-frame {
+    padding: 23px 14px 20px;
+  }
+
+  .step-overview,
+  .current-step-card {
+    min-height: 273px;
+  }
+
+  .step-overview .panel-title {
+    padding-left: 8px;
+    margin-bottom: 16px;
+    font-size: 20px;
+    line-height: 26px;
+  }
+
+  .step-grid {
+    width: 260px;
+    grid-template-columns: repeat(3, 76px);
+    column-gap: 16px;
+    row-gap: 10px;
+  }
+
+  .step-item {
+    gap: 4px;
+    font-size: 20px;
+    line-height: 20px;
+  }
+
+  .step-icon {
+    width: 76px;
+  }
+
+  .current-step-card {
+    padding: 30px 28px 20px;
+  }
+
+  .workspace {
+    width: min(100%, 626px);
+    height: 573px;
+  }
+
+  .tool-panel {
+    width: 284px;
+    height: 528px;
+    margin-top: 37px;
+    padding: 26px 17px 38px;
+    transform: translateX(28px);
+  }
+
+  .tool-title {
+    margin-bottom: 10px;
+    font-size: 20px;
+    line-height: 26px;
+  }
+
+  .tool-list {
+    gap: 10px;
+  }
+
+  .tool-button {
+    min-height: 72px;
+    padding: 10px 32px;
+  }
+
+  .tool-button.is-active {
+    min-height: 98px;
+    padding: 11px 25px 11px 27px;
+    transform: scale(1.04);
+  }
+
+  .tool-icon-wrap {
+    width: 59px;
+    height: 75px;
+  }
+
+  .tool-icon-wrap::before {
+    width: 51px;
+    height: 51px;
+  }
+
+  .tool-button.is-active .tool-icon-wrap::before {
+    width: 59px;
+    height: 59px;
+  }
+
+  .tool-icon.tool-pencil,
+  .tool-icon.tool-knife,
+  .tool-icon.tool-brush {
+    width: 29px;
+    height: 75px;
+  }
+
+  .tool-icon.tool-sandpaper {
+    width: 41px;
+    height: 60px;
+  }
+
+  .tool-name,
+  .tool-button.is-active .tool-name {
+    width: 111px;
+    font-size: 20px;
+  }
+
+  .bottom-hint {
+    width: min(490px, calc(100vw - 36px));
+    min-height: 65px;
+    margin-top: 30px;
+    padding: 12px 26px;
+    grid-template-columns: 106px 1fr;
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1900px) and (min-height: 900px) {
+  body[data-page="craft-mask"] .craft-page {
+    padding-top: clamp(58px, 6.5vh, 72px);
+    padding-bottom: 0;
+  }
+
+  body[data-page="craft-mask"] .page-title-row {
+    margin-bottom: clamp(54px, 5.8vh, 64px);
+  }
+
+  .main-layout {
+    padding: 0 24px 0 0;
+    padding-bottom: 0;
+    grid-template-columns: 340px minmax(660px, 720px) 340px;
+    gap: clamp(120px, 11.5vw, 238px);
+  }
+
+  .left-panel {
+    height: 662px;
+    gap: 16px;
+    transform: translateX(-34px);
+  }
+
+  .panel-frame {
+    padding: 30px 34px 28px;
+  }
+
+  .step-overview {
+    min-height: 325px;
+  }
+
+  .step-overview .panel-title {
+    padding-left: 0;
+    margin-bottom: 24px;
+    font-size: 24px;
+    line-height: 30px;
+  }
+
+  .step-grid {
+    width: 286px;
+    grid-template-columns: repeat(3, 82px);
+    column-gap: 20px;
+    row-gap: 12px;
+  }
+
+  .step-item {
+    gap: 4px;
+    font-size: 20px;
+    line-height: 22px;
+  }
+
+  .step-icon {
+    width: 80px;
+  }
+
+  .current-step-card {
+    min-height: 321px;
+    padding: 38px 34px 30px;
+  }
+
+  .current-step-head {
+    justify-content: flex-start;
+    gap: 26px;
+    margin: 0 0 30px;
+  }
+
+  .current-step-icon {
+    width: 86px;
+    height: 86px;
+  }
+
+  .current-step-title {
+    width: 150px;
+    font-size: 24px;
+    line-height: 34px;
+  }
+
+  .current-step-desc {
+    font-size: 18px;
+    line-height: 31px;
+  }
+
+  .workspace {
+    width: min(100%, 720px);
+    height: 662px;
+  }
+
+  .tool-panel {
+    width: 340px;
+    height: 666px;
+    margin-top: 35px;
+    padding: 36px 22px 48px;
+    transform: translateX(34px);
+  }
+
+  .tool-title {
+    margin-bottom: 20px;
+    font-size: 26px;
+    line-height: 32px;
+  }
+
+  .tool-list {
+    gap: 12px;
+  }
+
+  .tool-button {
+    min-height: 112px;
+    padding: 14px 42px 14px 28px;
+  }
+
+  .tool-button.is-active {
+    min-height: 112px;
+    padding: 14px 42px 14px 28px;
+    transform: none;
+  }
+
+  .tool-icon-wrap {
+    width: 82px;
+    height: 88px;
+  }
+
+  .tool-icon-wrap::before {
+    width: 74px;
+    height: 74px;
+  }
+
+  .tool-button.is-active .tool-icon-wrap::before {
+    width: 74px;
+    height: 74px;
+  }
+
+  .tool-icon.tool-pencil,
+  .tool-icon.tool-knife,
+  .tool-icon.tool-brush {
+    width: 34px;
+    height: 90px;
+  }
+
+  .tool-icon.tool-sandpaper {
+    width: 58px;
+    height: 82px;
+  }
+
+  .tool-name,
+  .tool-button.is-active .tool-name {
+    width: 126px;
+    font-size: 24px;
+  }
+
+  .bottom-hint {
+    width: min(580px, calc(100vw - 36px));
+    min-height: 76px;
+    margin-top: 26px;
+    padding: 14px 32px;
+    grid-template-columns: 124px 1fr;
+    gap: 20px;
+  }
+
+  .hint-label {
+    width: 124px;
+    min-height: 50px;
+    font-size: 24px;
+  }
+
+  .hint-text {
+    font-size: 20px;
+    line-height: 26px;
+  }
+}
+
+@media (max-width: 900px) {
+  .header {
+    height: 78px;
+    padding: 18px 20px 0;
+  }
+
+  .page-title {
+    font-size: 34px;
+  }
+
+  .main-layout {
+    min-height: auto;
+    padding: 24px 18px 114px;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "workspace"
+      "tools"
+      "left";
+    justify-items: center;
+    overflow: visible;
+  }
+
+  .workspace {
+    grid-area: workspace;
+    width: min(100%, 616px);
+    height: auto;
+    aspect-ratio: 616 / 573;
+  }
+
+  .tool-panel {
+    grid-area: tools;
+    width: min(100%, 616px);
+    height: auto;
+    margin-top: 0;
+    padding: 16px;
+    transform: none;
+  }
+
+  .tool-list {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .tool-button,
+  .tool-button.is-active {
+    min-width: 142px;
+    min-height: 88px;
+    padding: 8px 12px;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+  }
+
+  .tool-name,
+  .tool-button.is-active .tool-name {
+    width: auto;
+    font-size: 20px;
+  }
+
+  .tool-icon-wrap {
+    width: 54px;
+    height: 64px;
+    transform: scale(0.86);
+  }
+
+  .left-panel {
+    grid-area: left;
+    width: min(100%, 616px);
+    height: auto;
+    flex-direction: row;
+    align-items: stretch;
+    transform: none;
+  }
+
+  .step-overview,
+  .current-step-card {
+    flex: 1 1 0;
+  }
+
+  .panel-frame,
+  .tool-panel {
+    background: rgba(10, 7, 6, 0.72);
+  }
+
+  .bottom-hint {
+    position: fixed;
+    left: 50%;
+    bottom: 14px;
+    transform: translateX(-50%);
+    margin: 0;
+    z-index: 10;
+  }
+}
+
+@media (max-width: 620px) {
+  .header {
+    grid-template-columns: 55px 1fr 20px;
+  }
+
+  .page-title {
+    font-size: 30px;
+  }
+
+  .main-layout {
+    padding: 18px 12px 122px;
+    gap: 14px;
+  }
+
+  .left-panel {
+    flex-direction: column;
+  }
+
+  .step-overview,
+  .current-step-card {
+    min-height: auto;
+  }
+
+  .step-grid {
+    width: 100%;
+    grid-template-columns: repeat(6, minmax(52px, 1fr));
+    overflow-x: auto;
+  }
+
+  .step-item {
+    font-size: 16px;
+  }
+
+  .step-icon {
+    width: 54px;
+  }
+
+  .current-step-head {
+    margin-top: 2px;
+  }
+
+  .current-step-title {
+    width: auto;
+  }
+
+  .tool-panel {
+    padding: 12px;
+  }
+
+  .panel-frame,
+  .tool-panel,
+  .bottom-hint {
+    background: rgba(8, 6, 5, 0.78);
+  }
+
+  .tool-button,
+  .tool-button.is-active {
+    min-width: 118px;
+  }
+
+  .bottom-hint {
+    width: calc(100vw - 20px);
+    grid-template-columns: 88px 1fr;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .hint-label {
+    font-size: 17px;
+  }
+
+  .hint-text {
+    font-size: 16px;
+    line-height: 20px;
+  }
+}
+
+/* Unified coral-gold-platinum craft palette */
+.craft-page,
+.craft-mask-page {
+  --craft-bg: #060606;
+  --craft-panel: rgba(18, 15, 11, 0.56);
+  --craft-platinum: #fff6dd;
+  --craft-ivory: #f3e8d2;
+  --craft-coral: #e96f4a;
+  --craft-soft-coral: #d95f45;
+  --craft-gold: #d8b36a;
+  --craft-light-gold: #f0d18a;
+}
+
+.craft-page,
+.craft-mask-page,
+body[data-page="craft-mask"] {
+  background: transparent;
+}
+
+.page-title,
+.current-step-title,
+.mask-name,
+.step-name {
+  color: var(--craft-platinum, #fff6dd);
+  text-shadow: 0 0 16px rgba(255, 246, 221, 0.16);
+}
+
+.subtitle,
+.hint-text,
+.current-step-desc {
+  color: rgba(246, 240, 228, 0.66);
+}
+
+.panel-frame,
+.tool-panel,
+.step-overview,
+.current-step-card,
+.bottom-hint {
+  border-color: rgba(240, 209, 138, 0.16);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 246, 221, 0.045), transparent 56%),
+    rgba(18, 15, 11, 0.56);
+}
+
+.step-item,
+.tool-button {
+  border-color: rgba(240, 209, 138, 0.18);
+  color: rgba(246, 240, 228, 0.66);
+  background: rgba(6, 6, 6, 0.36);
+}
+
+.step-item.is-active,
+.tool-button.is-active,
+.tool-button:hover {
+  border-color: rgba(240, 209, 138, 0.76);
+  color: var(--craft-platinum, #fff6dd);
+  background: rgba(233, 111, 74, 0.16);
+  box-shadow: 0 0 20px rgba(233, 111, 74, 0.16), 0 0 18px rgba(255, 246, 221, 0.08);
+}
+
+.mask-stage,
+.mask-preview,
+.workbench-mask {
+  filter:
+    drop-shadow(0 22px 30px rgba(0, 0, 0, 0.52))
+    drop-shadow(0 0 18px rgba(255, 246, 221, 0.14))
+    drop-shadow(0 0 14px rgba(233, 111, 74, 0.08));
+}

@@ -1,0 +1,93 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>傩场 NuoField | 戴面入场</title>
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/effects.css" />
+    <link rel="stylesheet" href="../css/pages.css?v=20260611-wear-heading-line" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "../assets/vendor/three/three.module.js",
+          "three/addons/": "../assets/vendor/three/examples/jsm/"
+        }
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+  </head>
+  <body data-root=".." data-page="wear-mask">
+    <canvas id="particleCanvas" class="particle-canvas" aria-hidden="true"></canvas>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="../home.html"><span class="brand-mark"></span><span>傩场</span></a>
+        <nav class="site-nav" aria-label="主流程导航">
+          <a href="origin.html" data-route="origin">溯源</a>
+          <a href="three-senses.html" data-route="three-senses">三感</a>
+          <a href="masks.html" data-route="masks">诸神</a>
+          <a href="choose-mask.html" data-route="choose-mask">择面</a>
+          <a href="craft-mask.html" data-route="craft-mask">制面</a>
+          <a href="wear-mask.html" data-route="wear-mask">戴面</a>
+          <a href="gestures.html" data-route="gestures">手诀</a>
+          <a href="instruments.html" data-route="instruments">法器</a>
+          <a href="music.html" data-route="music">傩乐</a>
+          <a href="summary.html" data-route="summary">传承</a>
+        </nav>
+      </header>
+
+      <main class="wear-immersive-page">
+        <section class="wear-immersive-stage" id="wearStage" aria-label="面具追踪佩戴屏幕">
+          <video id="wearVideo" autoplay playsinline muted></video>
+          <div class="wear-camera-dim" aria-hidden="true"></div>
+          <div class="wear-fallback" id="wearFallback">
+            <div class="face-outline"></div>
+          </div>
+          <img class="wear-mask-png" id="wearMaskPng" alt="面具佩戴叠加" />
+          <canvas id="wearThreeCanvas"></canvas>
+          <canvas id="wearHandCanvas"></canvas>
+          <button class="wear-status wear-wear-prompt" id="simulateWear" type="button">点击模拟佩戴</button>
+
+          <aside class="wear-overlay-stack" aria-label="面具信息与手势指引">
+            <div class="wear-page-kicker">戴面入场</div>
+            <section class="wear-overlay-panel wear-info-panel" id="wearInfo"></section>
+            <section class="wear-overlay-panel wear-gesture-panel">
+              <h2>手势指引</h2>
+              <div class="wear-gesture-grid">
+                <article>
+                  <span>握拳</span>
+                  <img src="../assets/images/gestures/hand-fist.png" alt="握拳手势" onerror="this.onerror=null;this.src='../assets/images/gestures/hand-fist.svg'" />
+                  <p>面具粒子聚拢</p>
+                </article>
+                <article>
+                  <span>张开</span>
+                  <img src="../assets/images/gestures/hand-open.png" alt="张手手势" onerror="this.onerror=null;this.src='../assets/images/gestures/hand-open.svg'" />
+                  <p>面具粒子发散</p>
+                </article>
+              </div>
+            </section>
+          </aside>
+
+          <a class="wear-mask-library" href="choose-mask.html" aria-label="进入面具库">
+            <span>面具库</span>
+            <i aria-hidden="true"></i>
+          </a>
+
+          <button class="wear-next-button" type="button" id="enterGestures">下一步</button>
+        </section>
+      </main>
+    </div>
+
+    <button class="audio-toggle" type="button" aria-label="背景音乐开关">乐</button>
+    <script src="../js/data.js"></script>
+    <script src="../js/state.js"></script>
+    <script src="../js/router.js"></script>
+    <script src="../js/audio.js"></script>
+    <script src="../js/cursor-particles.js"></script>
+    <script src="../js/app.js"></script>
+    <script type="module" src="../js/page-wear-mask.js?v=20260611-wear-panel-figma"></script>
+  </body>
+</html>
+

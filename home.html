@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>傩场 NuoField | 入傩之门</title>
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/effects.css" />
+    <link rel="stylesheet" href="css/pages.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./assets/vendor/three/build/three.module.js",
+          "three/addons/": "./assets/vendor/three/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body class="is-intro-active" data-root="." data-page="home">
+    <canvas id="particleCanvas" class="particle-canvas" aria-hidden="true"></canvas>
+    <div class="intro-overlay" id="introOverlay" aria-label="傩场开场">
+      <div class="intro-scripture" aria-hidden="true">傩 祭 面 仪 声 形 动 场 傩 祭 面 仪 声 形 动 场</div>
+      <div class="intro-dust" aria-hidden="true"></div>
+      <p class="intro-title">形起，动生，声入场。</p>
+    </div>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="home.html" aria-label="返回入傩之门">
+          <span class="brand-mark"></span>
+          <span>傩场</span>
+        </a>
+        <nav class="site-nav" aria-label="主流程导航">
+          <a href="pages/origin.html" data-route="origin">溯源</a>
+          <a href="pages/three-senses.html" data-route="three-senses">三感</a>
+          <a href="pages/masks.html" data-route="masks">诸神</a>
+          <a href="pages/choose-mask.html" data-route="choose-mask">择面</a>
+          <a href="pages/craft-mask.html" data-route="craft-mask">制面</a>
+          <a href="pages/wear-mask.html" data-route="wear-mask">戴面</a>
+          <a href="pages/gestures.html" data-route="gestures">手诀</a>
+          <a href="pages/instruments.html" data-route="instruments">法器</a>
+          <a href="pages/music.html" data-route="music">傩乐</a>
+          <a href="pages/summary.html" data-route="summary">传承</a>
+        </nav>
+      </header>
+
+      <main class="page-main home-page">
+        <section class="cover-scene" aria-label="傩场封面入口">
+          <img class="cover-figma-bg" src="assets/images/home/figma-cover-bg.png" alt="" aria-hidden="true" />
+          <div class="cover-mask-field" aria-hidden="true">
+            <div class="cover-ring cover-ring-one"></div>
+            <div class="cover-ring cover-ring-two"></div>
+            <canvas id="coverMaskCanvas" class="cover-mask-canvas"></canvas>
+            <img class="cover-mask-fallback" src="assets/images/home/cover-mask.png" alt="" onerror="NuoApp.imageFallback(this)" />
+          </div>
+          <div class="cover-dust" aria-hidden="true"></div>
+          <div class="cover-ghost-lines" aria-hidden="true"></div>
+          <p class="cover-brand" data-node-id="184:1063">阿里云产学研协同育人项目</p>
+          <div class="cover-title-wrap">
+            <div class="cover-title-particles" id="coverTitleParticles" aria-label="傩场"></div>
+            <p class="cover-title-loading" id="coverTitleLoading">正在唤醒海量灵力流沙</p>
+          </div>
+          <a class="cover-gate-link" href="pages/origin.html" aria-label="入傩之门，进入傩迹溯源">
+            <span>入傩之门</span>
+            <img src="assets/images/home/cover-arrow.svg" alt="" aria-hidden="true" />
+          </a>
+        </section>
+      </main>
+    </div>
+
+    <button class="audio-toggle" type="button" aria-label="背景音乐开关">乐</button>
+
+    <script src="js/data.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/cursor-particles.js"></script>
+    <script src="js/app.js"></script>
+    <script type="module" src="js/page-home.js?v=20260609-red-edge-black-fill-glow"></script>
+    <script type="module" src="js/page-home-title.js?v=20260610-title-particle-halo"></script>
+  </body>
+</html>

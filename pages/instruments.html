@@ -1,0 +1,100 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>傩场 NuoField | 法器生光</title>
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/effects.css" />
+    <link rel="stylesheet" href="../css/pages.css" />
+    <link rel="stylesheet" href="../css/page-instruments.css" />
+  </head>
+  <body data-root=".." data-page="instruments">
+    <canvas id="particleCanvas" class="particle-canvas" aria-hidden="true"></canvas>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="../home.html"><span class="brand-mark"></span><span>傩场</span></a>
+        <nav class="site-nav" aria-label="主流程导航">
+          <a href="origin.html" data-route="origin">溯源</a>
+          <a href="three-senses.html" data-route="three-senses">三感</a>
+          <a href="masks.html" data-route="masks">诸神</a>
+          <a href="choose-mask.html" data-route="choose-mask">择面</a>
+          <a href="craft-mask.html" data-route="craft-mask">制面</a>
+          <a href="wear-mask.html" data-route="wear-mask">戴面</a>
+          <a href="gestures.html" data-route="gestures">手诀</a>
+          <a href="instruments.html" data-route="instruments">法器</a>
+          <a href="music.html" data-route="music">傩乐</a>
+          <a href="summary.html" data-route="summary">传承</a>
+        </nav>
+      </header>
+
+      <main class="page-main instrument-page">
+        <section class="faqi-scene" aria-label="傩场：法器生光">
+          <div id="canvas-container" class="faqi-canvas-container" aria-hidden="true"></div>
+          <p id="loading" class="faqi-loading" aria-live="polite">正在凝聚法器阵列...</p>
+
+          <section class="faqi-stage" aria-labelledby="page-title">
+            <h1 id="page-title" class="faqi-title">法器生光</h1>
+
+            <div class="faqi-artifact-images" aria-hidden="true">
+              <img class="faqi-artifact-image faqi-image-1" data-artifact-image="faqi1" src="../assets/images/instruments/faqi_1.png" alt="" />
+              <img class="faqi-artifact-image faqi-image-2" data-artifact-image="faqi2" src="../assets/images/instruments/faqi_2.png" alt="" />
+              <img class="faqi-artifact-image faqi-image-3" data-artifact-image="faqi3" src="../assets/images/instruments/faqi_3.png" alt="" />
+              <img class="faqi-artifact-image faqi-image-4" data-artifact-image="faqi4" src="../assets/images/instruments/faqi_4.png" alt="" />
+              <img class="faqi-artifact-image faqi-image-5" data-artifact-image="faqi5" src="../assets/images/instruments/faqi_5.png" alt="" />
+            </div>
+
+            <div class="faqi-artifact-labels" aria-label="傩戏法器">
+              <span class="faqi-vertical-label faqi-label-1">开山斧</span>
+              <span class="faqi-vertical-label faqi-label-2">令旗</span>
+              <span class="faqi-vertical-label faqi-label-3">先师角</span>
+              <span class="faqi-vertical-label faqi-label-4">锣鼓</span>
+              <span class="faqi-vertical-label faqi-label-5">师刀</span>
+            </div>
+
+            <section class="faqi-intro-panel" data-reveal-intro aria-label="法器简介">
+              <p class="faqi-intro-kicker">五方法器</p>
+              <p>
+                法器随傩师入场，在鼓点、步罡与唱词之间被逐一唤醒。它们既是仪式的器物，也是角色动作的线索，
+                用来驱邪纳吉、通神达意，并把观众带入傩场的神圣秩序。
+              </p>
+            </section>
+
+            <button class="instrument-next-button interactive" type="button" id="enterMusic">下一步</button>
+          </section>
+
+          <div class="faqi-card-backdrop" data-card-backdrop></div>
+          <aside class="faqi-info-card" data-info-card aria-hidden="true" aria-label="法器信息卡片">
+            <button class="faqi-card-close" type="button" data-close-card aria-label="收起信息卡片">收起</button>
+            <div class="faqi-card-shell">
+              <div class="faqi-card-hero">
+                <img data-card-hero src="../assets/images/instruments/cards/small-faqi-1.png" alt="" />
+              </div>
+              <img class="faqi-card-person" data-card-person src="../assets/images/instruments/faqi_1.png" alt="" />
+              <div class="faqi-card-text">
+                <h2 data-card-title>开山斧</h2>
+                <p class="faqi-card-region" data-card-region>江西石邮傩、西南各区域</p>
+                <div class="faqi-card-meaning">
+                  <p class="faqi-meaning-title">寓意简介</p>
+                  <p data-card-body>傩神庙开坛、开辟神道的核心法器，代表人类征服自然、战胜魔鬼的深沉力量与狞厉风格。</p>
+                </div>
+                <p class="faqi-card-quote" data-card-quote>“巨斧开山劈险路，<br />斩妖除魔护安宁。”</p>
+              </div>
+            </div>
+          </aside>
+        </section>
+      </main>
+    </div>
+
+    <button class="audio-toggle" type="button" aria-label="背景音乐开关">乐</button>
+    <script src="../js/data.js"></script>
+    <script src="../js/state.js"></script>
+    <script src="../js/router.js"></script>
+    <script src="../js/audio.js"></script>
+    <script src="../js/cursor-particles.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/page-instruments.js"></script>
+  </body>
+</html>
+

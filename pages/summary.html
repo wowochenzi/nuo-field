@@ -1,0 +1,119 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>傩场 NuoField | 终章</title>
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/effects.css" />
+    <link rel="stylesheet" href="../css/pages.css" />
+    <link rel="stylesheet" href="../css/page-ending.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "../assets/vendor/three/build/three.module.js",
+          "three/addons/": "../assets/vendor/three/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body data-root=".." data-page="summary" data-ending-phase="intro-closed">
+    <canvas id="particleCanvas" class="particle-canvas" aria-hidden="true"></canvas>
+
+    <main class="ending-page" aria-label="傩场终章">
+      <section class="ending-intro-scene" aria-label="傩舞祝辞">
+        <div class="ending-ghost-words" aria-hidden="true">
+          <span>傩祭面仪声形动场傩祭面仪声形动场</span>
+          <span>形起动生声入场形起动生声入场</span>
+          <span>傩舞起百病消灾难避鸿运盛</span>
+          <span>面仪声形动场祈福面仪声形动场祈福</span>
+          <span>傩祭面仪声形动场傩祭面仪声形动场</span>
+          <span>形起动生声入场形起动生声入场</span>
+          <span>傩舞起百病消灾难避鸿运盛</span>
+          <span>面仪声形动场祈福面仪声形动场祈福</span>
+          <span>傩祭面仪声形动场傩祭面仪声形动场</span>
+          <span>形起动生声入场形起动生声入场</span>
+          <span>傩舞起百病消灾难避鸿运盛</span>
+          <span>面仪声形动场祈福面仪声形动场祈福</span>
+        </div>
+        <div class="ending-intro-orb" aria-hidden="true"></div>
+        <h1 class="ending-intro-lines">
+          <span>傩舞起，百病消；</span>
+          <span>傩舞起，灾难避；</span>
+          <span>傩舞起，鸿运盛。</span>
+        </h1>
+      </section>
+
+      <section class="ending-tail-scene" aria-label="傩场粒子视差终章">
+        <div id="endingCanvasContainer" class="ending-canvas-container"></div>
+        <div class="ending-mask-overlay" aria-hidden="true"></div>
+        <div class="ending-scroll-hint" aria-hidden="true">滚动穿过傩面粒子</div>
+      </section>
+
+      <section class="ending-final-scene" aria-label="傩戏闭幕">
+        <div class="ending-final-curtain" aria-hidden="true"></div>
+        <div class="ending-final-copy">
+          <h2>傩场 Nuo Field</h2>
+          <p>一场傩戏落幕，一段文化永存</p>
+        </div>
+        <div class="ending-final-masks" aria-hidden="true">
+          <img src="../assets/ending/masks/1.png" alt="" />
+          <img src="../assets/ending/masks/2.png" alt="" />
+          <img src="../assets/ending/masks/3.png" alt="" />
+          <img src="../assets/ending/masks/4.png" alt="" />
+          <img src="../assets/ending/masks/5.png" alt="" />
+          <img src="../assets/ending/masks/6.png" alt="" />
+          <img src="../assets/ending/masks/7.png" alt="" />
+          <img src="../assets/ending/masks/8.png" alt="" />
+          <img src="../assets/ending/masks/1.png" alt="" />
+          <img src="../assets/ending/masks/2.png" alt="" />
+          <img src="../assets/ending/masks/3.png" alt="" />
+          <img src="../assets/ending/masks/4.png" alt="" />
+        </div>
+        <nav class="ending-return-menu" aria-label="终章返回导航">
+          <span class="ending-return-idle" aria-hidden="true">返回</span>
+          <span class="ending-return-options">
+            <a href="../opening.html">开场</a>
+            <a href="../home.html">主页</a>
+          </span>
+        </nav>
+      </section>
+
+      <button class="ending-eye-overlay" id="endingEyeOverlay" type="button" aria-label="睁眼或闭眼">
+        <span class="ending-mask-vision" aria-hidden="true"></span>
+        <span class="ending-eye-hint" id="endingEyeHint">点击睁眼</span>
+      </button>
+    </main>
+
+    <button class="audio-toggle" type="button" aria-label="背景音乐开关">乐</button>
+
+    <script id="noise-glsl" type="x-shader/x-fragment">
+      vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+      vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+      vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+      vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+      float snoise(vec3 v) {
+          const vec2 C = vec2(1.0/6.0, 1.0/3.0); const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+          vec3 i = floor(v + dot(v, C.yyy)); vec3 x0 = v - i + dot(i, C.xxx);
+          vec3 g = step(x0.yzx, x0.xyz); vec3 l = 1.0 - g; vec3 i1 = min(g.xyz, l.zxy); vec3 i2 = max(g.xyz, l.zxy);
+          vec3 x1 = x0 - i1 + C.xxx; vec3 x2 = x0 - i2 + C.yyy; vec3 x3 = x0 - D.yyy;
+          i = mod289(i); vec4 p = permute(permute(permute(i.z + vec4(0.0, i1.z, i2.z, 1.0)) + i.y + vec4(0.0, i1.y, i2.y, 1.0)) + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+          float n_ = 0.142857142857; vec3 ns = n_ * D.wyz - D.xzx; vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+          vec4 x_ = floor(j * ns.z); vec4 y_ = floor(j - 7.0 * x_); vec4 x = x_ *ns.x + ns.yyyy; vec4 y = y_ *ns.x + ns.yyyy; vec4 h = 1.0 - abs(x) - abs(y);
+          vec4 b0 = vec4(x.xy, y.xy); vec4 b1 = vec4(x.zw, y.zw); vec4 s0 = floor(b0)*2.0 + 1.0; vec4 s1 = floor(b1)*2.0 + 1.0; vec4 sh = -step(h, vec4(0.0));
+          vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy; vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww; vec3 p0 = vec3(a0.xy,h.x); vec3 p1 = vec3(a0.zw,h.y); vec3 p2 = vec3(a1.xy,h.z); vec3 p3 = vec3(a1.zw,h.w);
+          vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3))); p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+          vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0); m = m * m; return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+      }
+    </script>
+    <script src="../js/data.js"></script>
+    <script src="../js/state.js"></script>
+    <script src="../js/router.js"></script>
+    <script src="../js/audio.js"></script>
+    <script src="../js/cursor-particles.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/page-summary.js"></script>
+  </body>
+</html>
+

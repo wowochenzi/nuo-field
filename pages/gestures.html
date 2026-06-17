@@ -1,0 +1,90 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>傩场 NuoField | 掌间傩势</title>
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/effects.css" />
+    <link rel="stylesheet" href="../css/pages.css?v=20260611-camera-dim-dual-hands" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "../assets/vendor/three/three.module.js",
+          "three/addons/": "../assets/vendor/three/examples/jsm/"
+        }
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+  </head>
+  <body data-root=".." data-page="gestures">
+    <canvas id="particleCanvas" class="particle-canvas" aria-hidden="true"></canvas>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="../home.html"><span class="brand-mark"></span><span>傩场</span></a>
+        <nav class="site-nav" aria-label="主流程导航">
+          <a href="origin.html" data-route="origin">溯源</a>
+          <a href="three-senses.html" data-route="three-senses">三感</a>
+          <a href="masks.html" data-route="masks">诸神</a>
+          <a href="choose-mask.html" data-route="choose-mask">择面</a>
+          <a href="craft-mask.html" data-route="craft-mask">制面</a>
+          <a href="wear-mask.html" data-route="wear-mask">戴面</a>
+          <a href="gestures.html" data-route="gestures">手诀</a>
+          <a href="instruments.html" data-route="instruments">法器</a>
+          <a href="music.html" data-route="music">傩乐</a>
+          <a href="summary.html" data-route="summary">传承</a>
+        </nav>
+      </header>
+
+      <main class="gesture-immersive-page">
+        <section class="gesture-immersive-stage" id="gestureStage" aria-label="掌间傩势手诀识别屏幕">
+          <img class="gesture-camera-poster" src="../assets/images/gestures/camera-image27.png" alt="" aria-hidden="true" />
+          <video id="gestureVideo" autoplay playsinline muted></video>
+          <div class="wear-camera-dim" aria-hidden="true"></div>
+          <canvas id="gestureThreeCanvas"></canvas>
+          <canvas id="gestureHandCanvas"></canvas>
+
+          <aside class="gesture-left-stack" aria-label="手诀提示">
+            <div class="wear-page-kicker gesture-page-kicker">掌间傩势</div>
+            <section class="gesture-panel gesture-hint-panel">
+              <h2>手诀提示</h2>
+              <button class="gesture-current-card" id="gestureCurrentCard" type="button" aria-label="模拟识别当前手诀">
+                <span class="gesture-vertical-name" id="gestureCurrentName">祖师诀</span>
+                <img id="gestureHintImage" src="../assets/images/gestures/zushijue-hint.png" alt="祖师诀手诀提示" />
+              </button>
+            </section>
+            <section class="gesture-panel gesture-info-panel">
+              <h2>手诀信息</h2>
+              <p id="gestureInfoText"></p>
+            </section>
+            <p class="gesture-stage-prompt">请根据提示做出相应手诀！</p>
+          </aside>
+
+          <aside class="gesture-right-stack" aria-label="手诀点亮">
+            <section class="gesture-panel gesture-light-panel">
+              <h2>手诀点亮</h2>
+              <div class="gesture-light-list" id="gestureLightList"></div>
+            </section>
+            <button class="wear-next-button gesture-next-button is-disabled" type="button" id="enterInstruments" disabled>下一步</button>
+          </aside>
+
+          <div class="gesture-complete-seal" id="gestureCompleteSeal" hidden>掌间傩势已成</div>
+          <div class="gesture-start-cue" id="gestureStartCue">请根据手势提示做出祖师诀！</div>
+          <button class="wear-status gesture-camera-button" id="gestureCameraButton" type="button">点击开启摄像头</button>
+        </section>
+      </main>
+    </div>
+
+    <button class="audio-toggle" type="button" aria-label="背景音乐开关">乐</button>
+    <script src="../js/data.js"></script>
+    <script src="../js/state.js"></script>
+    <script src="../js/router.js"></script>
+    <script src="../js/audio.js"></script>
+    <script src="../js/cursor-particles.js"></script>
+    <script src="../js/app.js"></script>
+    <script type="module" src="../js/page-gestures.js?v=20260615-dual-hand-nodes"></script>
+  </body>
+</html>
+

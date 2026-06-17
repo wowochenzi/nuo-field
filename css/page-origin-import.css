@@ -1,0 +1,1305 @@
+:root {
+    --design-width: 1440;
+    --design-height: 813;
+    --gold: #edca92;
+    --paper: #ede0d3;
+    --wine: #6e3535;
+    --ease-origin: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: #000;
+}
+
+body[data-page="origin"] {
+    background: #000;
+}
+
+body[data-page="origin"]::before,
+body[data-page="origin"]::after,
+body[data-page="origin"] .particle-canvas {
+    display: none;
+}
+
+.origin-import-main {
+    position: relative;
+    height: calc(100vh - 72px);
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.origin-import-main .page-title-row {
+    position: absolute;
+    left: clamp(18px, 4vw, 56px);
+    top: clamp(14px, 2.8vw, 30px);
+    z-index: 8;
+    margin: 0;
+    pointer-events: none;
+}
+
+.origin-import-main .page-title-row h1 {
+    color: var(--color-gold-soft);
+    text-shadow: 0 0 22px rgba(237, 202, 146, 0.26), 0 3px 14px rgba(0, 0, 0, 0.78);
+}
+
+button,
+img {
+    -webkit-user-drag: none;
+}
+
+button {
+    font: inherit;
+}
+
+.origin-page {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    color: var(--paper);
+    background:
+        radial-gradient(circle at 86% 72%, rgba(70, 22, 8, 0.86), transparent 34%),
+        linear-gradient(135deg, #050403 0%, #070606 48%, #381408 100%);
+    font-family: "SJzhuosong", "FangSong", "Songti SC", STSong, serif;
+}
+
+.origin-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("../assets/images/origin-250/background-texture.png") center / cover no-repeat;
+    opacity: 0.08;
+    pointer-events: none;
+}
+
+.origin-stage {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: var(--origin-stage-width, 1440px);
+    height: var(--origin-stage-height, 813px);
+    overflow: hidden;
+    transform: translate(-50%, -50%) scale(var(--origin-scale, 1));
+    transform-origin: center;
+    background:
+        radial-gradient(circle at 90% 78%, rgba(74, 24, 8, 0.9), transparent 36%),
+        linear-gradient(135deg, #050403 0%, #070606 48%, #381408 100%);
+}
+
+.origin-fixed-bg,
+.origin-viewport,
+.danuo-overlay {
+    position: absolute;
+    inset: 0;
+}
+
+.origin-fixed-bg {
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 88% 70%, rgba(74, 24, 8, 0.72), transparent 38%),
+        linear-gradient(135deg, #050403 0%, #080706 52%, #381408 100%);
+}
+
+.cover-texture {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.09;
+}
+
+.cloud {
+    position: absolute;
+    display: block;
+    pointer-events: none;
+}
+
+.cloud-10 { left: 0; top: 160.446px; width: 289px; height: 239.969px; }
+.cloud-09 { left: 26.597%; top: 120px; width: 204.763px; height: 182.705px; }
+.cloud-08 { left: 14.167%; top: 535.619px; width: 240.362px; height: 82.749px; }
+.cloud-07 { left: 46.042%; top: 211.957px; width: 356px; height: 106px; }
+.cloud-06 { left: 35.903%; top: 443.957px; width: 209px; height: 64px; }
+.cloud-05 { left: 50%; top: 641.388px; width: 211.298px; height: 199.11px; }
+.cloud-04 { left: calc(100% - 474px); top: 129.763px; width: 132.139px; height: 81.681px; }
+.cloud-03 { left: calc(100% - 269px); top: 239px; width: 193px; height: 144px; }
+.cloud-02 { left: calc(100% - 421px); top: 475.646px; width: 184px; height: 93.985px; }
+.cloud-01 { left: calc(100% - 237px); top: 518.957px; width: 272px; height: 130px; }
+
+.origin-viewport {
+    overflow: hidden;
+    outline: 0;
+}
+
+.origin-scroll-layer {
+    position: absolute;
+    left: 0;
+    top: 74px;
+    width: 3241.139px;
+    height: 766px;
+    transform: translate3d(var(--timeline-x, 0px), 0, 0);
+    transition: transform 720ms var(--ease-origin);
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+.origin-scroll-layer.is-resizing {
+    transition: none;
+}
+
+.timeline-vector {
+    position: absolute;
+    left: 144px;
+    top: 17.82px;
+    width: 2890.331px;
+    height: 599.295px;
+    opacity: 0.72;
+    filter: brightness(0.78) saturate(0.86);
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 3000ms cubic-bezier(0.42, 0, 0.58, 1), opacity 800ms var(--ease-origin), filter 800ms var(--ease-origin);
+}
+
+.origin-stage.is-timeline-ready .timeline-vector {
+    clip-path: inset(0 0 0 0);
+}
+
+.era {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    filter: brightness(0.48) saturate(0.68);
+    transition: opacity 820ms var(--ease-origin), filter 820ms var(--ease-origin), visibility 0s linear 820ms;
+}
+
+.era.is-past {
+    opacity: 0.32;
+    visibility: visible;
+    filter: brightness(0.48) saturate(0.68);
+    transition-delay: 0s;
+}
+
+.era.is-current {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    filter: brightness(1) saturate(1);
+    transition-delay: 120ms, 120ms, 0s;
+}
+
+.era h2,
+.era-heading h2 {
+    margin: 0;
+    color: var(--gold);
+    font-family: "Huiwen-mincho", "Songti SC", STSong, serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.64px;
+}
+
+.era p,
+.era figure {
+    margin: 0;
+}
+
+.crop {
+    position: absolute;
+    overflow: hidden;
+}
+
+.crop > img {
+    position: absolute;
+    max-width: none;
+}
+
+.era-ribbon {
+    position: absolute;
+    height: 38px;
+    color: rgba(229, 206, 173, 0.96);
+    font-family: "Huiwen-mincho", "Songti SC", STSong, serif;
+    font-size: 24px;
+    line-height: 38px;
+    letter-spacing: -0.48px;
+    background: linear-gradient(90deg, rgba(255, 174, 104, 0.45), rgba(206, 75, 71, 0));
+    border-radius: 12px 0 0 12px;
+}
+
+.copy-frame {
+    position: absolute;
+    color: var(--paper);
+    font-size: 20px;
+    line-height: 1.15;
+    letter-spacing: -0.4px;
+}
+
+/* Shang-Zhou: Figma 225:31 */
+.shangzhou-crop-1 { left: 0; top: 90px; width: 182px; height: 334px; }
+.shangzhou-crop-1 img { left: 0; top: -0.12%; width: 190%; height: 155.2%; }
+.shangzhou-crop-2 { left: 177px; top: 477px; width: 298px; height: 309px; }
+.shangzhou-crop-2 img { left: 0; top: -167.74%; width: 184.96%; height: 267.95%; }
+.shangzhou-crop-3 { left: 392px; top: 100px; width: 301px; height: 617px; }
+.shangzhou-crop-3 img { left: -115.46%; top: -0.13%; width: 215.46%; height: 157.54%; }
+
+.shangzhou-copy {
+    position: absolute;
+    left: 140px;
+    top: 254px;
+    width: 341px;
+    height: 242px;
+}
+
+.era-heading {
+    position: absolute;
+    left: 2px;
+    top: 0;
+    display: flex;
+    align-items: flex-end;
+    gap: 9px;
+    height: 40px;
+    white-space: nowrap;
+}
+
+.era-heading p {
+    height: 26px;
+    color: var(--paper);
+    font-family: "Huiwen-mincho", "Songti SC", STSong, serif;
+    font-size: 15px;
+    letter-spacing: -0.3px;
+}
+
+.shangzhou-copy > .era-ribbon {
+    left: 0;
+    top: 51px;
+    width: 328px;
+    padding-left: 55px;
+}
+
+.shangzhou-copy-frame {
+    left: 45px;
+    top: 71px;
+    width: 296px;
+    height: 192px;
+    background: url("../assets/images/origin-250/shangzhou-copy-frame.png") center / 100% 100% no-repeat;
+}
+
+.shangzhou-copy-frame p {
+    position: absolute;
+    left: 16px;
+    top: 32px;
+    width: 276px;
+}
+
+/* Han-Tang: Figma 248:3 / 225:71 */
+.hantang-title { position: absolute; left: 754px; top: 10px; }
+.hantang-ribbon { left: 504px; top: 112px; width: 328px; padding-right: 13px; text-align: right; }
+
+.hantang-copy-frame {
+    position: absolute;
+    left: 823px;
+    top: 3px;
+    width: 284px;
+    height: 242px;
+    background: url("../assets/images/origin-250/hantang-frame.png") center / 100% 100% no-repeat;
+}
+
+.hantang-copy-frame p {
+    position: absolute;
+    left: 21px;
+    top: 22px;
+    width: 263px;
+    color: var(--paper);
+    font-size: 20px;
+    line-height: 1.15;
+    letter-spacing: -0.4px;
+}
+
+.hantang-keywords {
+    position: absolute;
+    left: 717px;
+    top: 347px;
+    width: 285px;
+    height: 152px;
+    display: grid;
+    gap: 4px;
+}
+
+.hantang-keywords span {
+    display: block;
+    width: 283px;
+    height: 48px;
+    padding: 6px 14px;
+    color: var(--paper);
+    font-size: 15px;
+    line-height: 1.15;
+    background: linear-gradient(90deg, rgba(111, 58, 41, 0.9), rgba(111, 58, 41, 0.15));
+    border-radius: 12px 0 0 12px;
+}
+
+.hantang-crop-lion { left: 669px; top: 0; width: 86px; height: 104px; }
+.hantang-crop-lion img { left: -0.2%; top: -65.81%; width: 301.17%; height: 165.81%; }
+.hantang-crop-stone { left: 674px; top: 196px; width: 240px; height: 139px; }
+.hantang-crop-stone img { left: -0.13%; top: 0; width: 203.97%; height: 235.78%; }
+.hantang-crop-musicians { left: 869px; top: 251px; width: 378px; height: 266px; }
+.hantang-crop-musicians img { left: -148.55%; top: 0; width: 248.71%; height: 235.78%; }
+.hantang-crop-mask { position: absolute; left: 782px; top: 432px; width: 220px; height: 301.404px; }
+.hantang-mask-image { position: relative; width: 220px; height: 264.404px; overflow: hidden; }
+.hantang-mask-image img { position: absolute; left: -246.1%; top: -90.84%; width: 353.67%; height: 196.18%; max-width: none; }
+.hantang-crop-mask figcaption {
+    position: absolute;
+    left: 0;
+    top: 250.404px;
+    width: 220px;
+    color: white;
+    font-family: "Huiwen-mincho", "Songti SC", STSong, serif;
+    font-size: 15px;
+    line-height: 1.15;
+    text-align: center;
+}
+.hantang-crop-mask figcaption span { font-size: 11px; }
+
+/* Song: Figma 225:114 */
+.song-copy-frame {
+    position: absolute;
+    left: 1060px;
+    top: 463px;
+    width: 386px;
+    height: 148px;
+}
+
+.song-copy-frame p {
+    position: absolute;
+    left: 36px;
+    top: 33px;
+    width: 335px;
+    color: var(--paper);
+    font-size: 20px;
+    line-height: 1.15;
+    letter-spacing: -0.4px;
+}
+
+.song-procession { left: 1199px; top: 588px; width: 375px; height: 136px; }
+.song-procession img { left: 0; top: -285.29%; width: 209.6%; height: 385.29%; }
+.song-title { position: absolute; left: 1516px; top: 546px; }
+.song-ribbon { left: 1545px; top: 628px; width: 328px; padding-left: 6px; }
+.song-summary { position: absolute; left: 1551px; top: 669px; width: 421px; color: var(--paper); font-family: "Huiwen-mincho", "Songti SC", STSong, serif; font-size: 15px; line-height: 1.15; letter-spacing: -0.3px; }
+
+.danuo-wrap {
+    position: absolute;
+    left: 1447px;
+    top: 4px;
+    width: 458px;
+    height: 527px;
+    border: 4px solid #f9d7ab;
+    overflow: visible;
+}
+
+.danuo-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.94;
+}
+
+.danuo-dim {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.23);
+    pointer-events: none;
+}
+
+.danuo-open,
+.danuo-close {
+    position: absolute;
+    width: 85px;
+    height: 27px;
+    padding: 0 0 0 8px;
+    border: 0;
+    border-radius: 6px 6px 0 0;
+    color: #5c110f;
+    background: linear-gradient(#967757, #6d5f4f);
+    font-family: "Huiwen-mincho", "Songti SC", STSong, serif;
+    font-size: 15px;
+    line-height: 27px;
+    letter-spacing: 8.1px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.danuo-open { left: 1788px; top: -23px; }
+
+.hotspot-layer {
+    position: absolute;
+    inset: 0;
+}
+
+.danuo-hotspot {
+    position: absolute;
+    width: 28px;
+    height: 29px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: #6a2a13;
+    background: url("../assets/images/origin-250/hotspot-pin.svg") center / contain no-repeat;
+    font-family: Georgia, serif;
+    font-size: 10px;
+    line-height: 27px;
+    text-align: center;
+    text-shadow: 0 0 4px #ffe29a;
+    cursor: pointer;
+    animation: hotspot-pulse 2.8s ease-in-out infinite;
+}
+
+.danuo-hotspot.is-active {
+    filter: brightness(1.35);
+    animation-duration: 1.4s;
+}
+
+.hotspot-1 { left: 44.0%; top: 37.7%; }
+.hotspot-2 { left: 71.8%; top: 75.6%; }
+.hotspot-3 { left: 17.8%; top: 18.7%; }
+.hotspot-4 { left: 56.1%; top: 61.7%; }
+.hotspot-5 { left: 36.4%; top: 78.4%; }
+.hotspot-6 { left: 68.1%; top: 20.2%; }
+.hotspot-7 { left: 88.0%; top: 64.0%; }
+
+@keyframes hotspot-pulse {
+    0%, 100% { opacity: 0.5; filter: brightness(0.9); transform: scale(0.96); }
+    50% { opacity: 0.9; filter: brightness(1.18); transform: scale(1.05); }
+}
+
+.detail-bubble {
+    position: absolute;
+    overflow: hidden;
+    border-radius: 50%;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.92);
+    transition: opacity 780ms var(--ease-origin), transform 780ms var(--ease-origin), visibility 0s linear 780ms;
+    background: linear-gradient(90deg, rgba(255, 174, 104, 0.3), rgba(255, 170, 170, 0));
+}
+
+.detail-bubble.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+    transition-delay: 0s;
+}
+
+.detail-bubble img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+}
+
+.detail-1 { left: 1159px; top: 43px; width: 175.154px; height: 163.714px; }
+.detail-2 { left: 1280px; top: 104px; width: 170.076px; height: 162.879px; }
+.detail-3 { left: 1247px; top: 287px; width: 170.077px; height: 170.396px; }
+.detail-4 { left: 1377px; top: 349px; width: 170.077px; height: 162.879px; }
+.detail-5 { left: 1621px; top: 431px; width: 169.231px; height: 162.879px; }
+.detail-6 { left: 1785px; top: 465px; width: 170.077px; height: 166.22px; }
+.detail-7 { left: 1874px; top: 312px; width: 169.231px; height: 162.879px; }
+
+/* Ming-Qing: Figma 225:173 and mask layers */
+.era-mingqing h2 { position: absolute; left: 2064px; top: 303px; }
+.mingqing-ribbon { left: 2079px; top: 408px; width: 328px; padding-left: 16px; }
+.mingqing-summary { position: absolute; left: 2126px; top: 457px; width: 439px; color: var(--paper); font-family: "Huiwen-mincho", "Songti SC", STSong, serif; font-size: 15px; line-height: 1.15; }
+.mingqing-copy-frame {
+    position: absolute;
+    left: 2112px;
+    top: 447px;
+    width: 400.5px;
+    height: 160.5px;
+    background: url("../assets/images/origin-250/mingqing-strip.png") center / 100% 100% no-repeat;
+}
+.mingqing-copy-frame p { position: absolute; left: 14px; top: 51px; width: 318px; color: var(--paper); font-size: 20px; line-height: 1.15; letter-spacing: -0.4px; }
+
+.mask-figure { position: absolute; margin: 0; }
+.mask-image-frame { position: absolute; inset: 0; overflow: hidden; }
+.mask-figure img { position: absolute; max-width: none; filter: drop-shadow(0 4px 4px rgba(195, 191, 179, 0.19)); }
+.mask-figure figcaption {
+    position: absolute;
+    width: 11px;
+    margin: 0;
+    overflow: visible;
+    color: white;
+    font-family: "Huiwen-mincho", "Songti SC", STSong, serif;
+    font-size: 11px;
+    line-height: 1.15;
+    letter-spacing: -0.22px;
+    text-align: center;
+    word-break: break-all;
+}
+.ancient-mask { left: 2028px; top: 22px; width: 252px; height: 252px; }
+.ancient-mask img { inset: 0; width: 252px; height: 252px; object-fit: contain; object-position: bottom; }
+.ancient-mask figcaption { left: 186px; top: 78px; height: 179px; }
+.modern-mask { left: 2205.5px; top: 27px; width: 228px; height: 230px; }
+.modern-mask .mask-image-frame { width: 228px; height: 228px; }
+.modern-mask img { left: -20.36px; top: 18.1px; width: 302.8px; height: 228px; }
+.modern-mask figcaption { left: 217.5px; top: 76px; height: 166px; }
+
+/* Modern: Frame 995 plus the transparent golden map replacing Frame 996. */
+.modern-copy { position: absolute; left: 2627px; top: 70px; width: 407px; height: 215px; }
+.modern-copy h2 { position: absolute; left: 340px; top: 6px; }
+.modern-ribbon { left: 97px; top: 47px; width: 309px; padding-left: 80px; white-space: nowrap; }
+.modern-copy-frame {
+    position: absolute;
+    left: 9px;
+    top: 51px;
+    width: 399.5px;
+    height: 158.5px;
+    background: url("../assets/images/origin-250/modern-copy-frame.png") center / 100% 100% no-repeat;
+}
+.modern-copy-frame p { position: absolute; right: 18px; top: 44px; width: 256px; color: var(--paper); font-size: 20px; line-height: 1.15; text-align: right; letter-spacing: -0.4px; }
+.modern-map { position: absolute; left: 2565px; top: 312px; width: 469px; height: 360px; margin: 0; }
+.modern-map > img {
+    position: absolute;
+    left: 31px;
+    top: 30px;
+    width: 406px;
+    height: 305px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 4px rgba(237, 202, 146, 0.18));
+}
+.era-modern.is-current .modern-map > img {
+    animation: modern-map-breath 3.6s ease-in-out infinite;
+}
+.era-modern.is-current .modern-map:hover > img,
+.era-modern.is-current .modern-map:focus-within > img {
+    filter: drop-shadow(0 0 13px rgba(237, 202, 146, 0.48));
+}
+@keyframes modern-map-breath {
+    0%, 100% { opacity: 0.92; filter: drop-shadow(0 0 4px rgba(237, 202, 146, 0.18)); }
+    50% { opacity: 1; filter: drop-shadow(0 0 12px rgba(237, 202, 146, 0.38)); }
+}
+.modern-map-trigger {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 18px;
+    background: transparent;
+    cursor: url("../assets/images/origin/map/map-magnifier-cursor.png") 12 12, zoom-in;
+}
+.modern-map-trigger:focus-visible {
+    outline: 1px solid rgba(237, 202, 146, 0.82);
+    outline-offset: -12px;
+}
+
+.era-marker {
+    position: absolute;
+    width: 54px;
+    height: 57px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.82);
+    filter: brightness(0.65) saturate(0.7);
+    transition: opacity 720ms var(--ease-origin), transform 720ms var(--ease-origin), filter 720ms var(--ease-origin), visibility 0s linear 720ms;
+    cursor: pointer;
+}
+
+.era-marker img { width: 100%; height: 100%; object-fit: contain; }
+.era-marker.is-past,
+.era-marker.is-current { visibility: visible; transition-delay: 0s; }
+.era-marker.is-past { opacity: 0.36; transform: scale(0.9); }
+.era-marker.is-current { opacity: 1; transform: scale(1); filter: brightness(1.22) saturate(1.08) drop-shadow(0 0 8px rgba(237, 202, 146, 0.42)); }
+.marker-shangzhou { left: 152px; top: 202px; }
+.marker-hantang { left: 767px; top: 47px; }
+.marker-song { left: 1545px; top: 581px; }
+.marker-mingqing { left: 2084px; top: 340px; }
+.marker-modern { left: 2974px; top: 28px; }
+
+.timeline-arrow {
+    position: absolute;
+    top: 386px;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 0;
+    border-radius: 45px;
+    background: rgba(61, 52, 52, 0.78);
+    opacity: 0.72;
+    cursor: pointer;
+    transition: opacity 260ms ease, filter 260ms ease;
+}
+.timeline-arrow:hover,
+.timeline-arrow:focus-visible { opacity: 1; filter: brightness(1.18); outline: none; }
+.timeline-arrow:disabled { opacity: 0.2; cursor: default; }
+.timeline-arrow img { width: 42px; height: 42px; display: block; }
+.timeline-arrow-left { left: 31px; }
+.timeline-arrow-right { right: 31px; transform: scaleX(-1); }
+.timeline-arrow-right.is-continue-ready {
+    opacity: 1;
+    background:
+        radial-gradient(circle, rgba(255, 238, 184, 0.36), rgba(104, 69, 33, 0.78) 68%),
+        rgba(78, 56, 35, 0.94);
+    box-shadow:
+        0 0 0 1px rgba(237, 202, 146, 0.48),
+        0 0 18px rgba(237, 202, 146, 0.46),
+        0 0 36px rgba(177, 95, 37, 0.24);
+    filter: brightness(1.18) saturate(1.08);
+    animation: originContinueFloat 1.45s ease-in-out infinite;
+}
+.timeline-next-hint {
+    position: absolute;
+    right: 84px;
+    top: 394px;
+    z-index: 5;
+    padding: 4px 10px 5px;
+    border: 1px solid rgba(237, 202, 146, 0.38);
+    border-radius: 999px;
+    color: rgba(255, 239, 202, 0.98);
+    background: rgba(17, 12, 8, 0.74);
+    box-shadow: 0 0 16px rgba(237, 202, 146, 0.18);
+    font-family: "Huiwen-mincho", "Songti SC", STSong, serif;
+    font-size: 14px;
+    line-height: 1.2;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateX(10px);
+    transition: opacity 280ms ease, transform 280ms var(--ease-origin), visibility 0s linear 280ms;
+}
+.origin-stage.is-three-senses-ready .timeline-next-hint {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    transition-delay: 0s;
+    animation: originContinueHint 1.45s ease-in-out infinite;
+}
+.origin-stage.is-leaving-to-three-senses {
+    pointer-events: none;
+    animation: originLeaveToSenses 240ms var(--ease-origin) both;
+    will-change: transform, filter;
+}
+
+@keyframes originContinueFloat {
+    0%, 100% { transform: scaleX(-1) translateY(0); }
+    50% { transform: scaleX(-1) translateY(-7px); }
+}
+
+@keyframes originContinueHint {
+    0%, 100% { opacity: 0.82; transform: translateX(0); }
+    50% { opacity: 1; transform: translateX(-6px); }
+}
+
+@keyframes originLeaveToSenses {
+    from { filter: brightness(1); transform: translate(-50%, -50%) scale(var(--origin-scale, 1)); }
+    to { filter: brightness(0.82); transform: translate(calc(-50% - 3vw), -50%) scale(var(--origin-scale, 1)); }
+}
+
+.danuo-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 620ms var(--ease-origin), visibility 0s linear 620ms;
+}
+
+.danuo-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
+}
+
+.danuo-overlay-veil {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.82);
+    backdrop-filter: blur(2px);
+}
+
+.danuo-expanded {
+    position: relative;
+    width: 634px;
+    height: 730px;
+    border: 4px solid #f9d7ab;
+    transform: scale(0.9);
+    transition: transform 720ms var(--ease-origin);
+}
+
+.danuo-overlay.is-open .danuo-expanded { transform: scale(1); }
+.danuo-expanded-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.96; }
+.danuo-close { right: 0; top: -31px; }
+
+/* Modern map overlay: Figma 292:2 mask layout on the hollow map treatment. */
+.modern-map-modal {
+    position: absolute;
+    inset: 0;
+    z-index: 12;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 620ms var(--ease-origin), visibility 0s linear 620ms;
+}
+
+.modern-map-modal.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
+}
+
+.modern-map-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: linear-gradient(135.72deg, #040303 3.333%, #080706 51.667%, #381408 86.667%);
+}
+
+.modern-map-modal__panel {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 1036px;
+    height: 623px;
+    overflow: hidden;
+    border: 1px solid rgba(202, 168, 110, 0.35);
+    border-radius: 16px;
+    background: rgba(17, 16, 13, 0.91);
+    box-shadow: 0 0 20px rgba(201, 168, 110, 0.28), 0 24px 48px rgba(0, 0, 0, 0.54);
+    transform: translate(-50%, -50%) scale(0.965);
+    transform-origin: center;
+    transition: transform 720ms var(--ease-origin);
+}
+
+.modern-map-modal.is-open .modern-map-modal__panel {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.modern-map-close {
+    position: absolute;
+    left: calc(50% + 433px);
+    top: calc(50% - 343px);
+    z-index: 14;
+    width: 85px;
+    height: 27px;
+    margin: 0;
+    padding: 0 0 0 8px;
+    border: 0;
+    border-radius: 6px 6px 0 0;
+    color: #5c110f;
+    background: linear-gradient(#967757, #6d5f4f);
+    font-family: "Huiwen-mincho", "Songti SC", STSong, serif;
+    font-size: 15px;
+    line-height: 27px;
+    letter-spacing: 8.1px;
+    text-align: center;
+    cursor: pointer;
+    transition: opacity 260ms ease, filter 260ms ease;
+}
+
+.modern-map-close:hover,
+.modern-map-close:focus-visible {
+    opacity: 1;
+    filter: brightness(1.18);
+    outline: none;
+}
+
+.modern-map-modal__heading {
+    position: absolute;
+    left: 50px;
+    top: 35px;
+    z-index: 8;
+    width: 512px;
+    height: 82px;
+}
+
+.modern-map-modal__heading h2,
+.modern-map-modal__heading p {
+    margin: 0;
+    font-weight: 400;
+}
+
+.modern-map-modal__heading h2 {
+    color: rgba(229, 206, 173, 0.96);
+    font-family: "Huiwen-mincho", "Songti SC", STSong, serif;
+    font-size: 31px;
+    line-height: 40px;
+}
+
+.modern-map-modal__heading p {
+    position: absolute;
+    left: 0;
+    top: 49px;
+    color: #a9977b;
+    font-family: "SJzhuosong", "FangSong", "Songti SC", STSong, serif;
+    font-size: 14px;
+    line-height: 21px;
+}
+
+.modern-map-modal__heading > span {
+    position: absolute;
+    left: 0;
+    top: 80px;
+    width: 260px;
+    height: 2px;
+    border-radius: 1px;
+    background: linear-gradient(90deg, rgba(242, 202, 114, 0.65), rgba(140, 117, 66, 0));
+}
+
+.modern-map-modal__map {
+    position: absolute;
+    left: 90px;
+    top: 58px;
+    width: 636px;
+    height: 498px;
+    transform: scale(1.12);
+    transform-origin: left top;
+}
+
+.modern-map-modal__outline {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0.76;
+    filter: drop-shadow(0 0 18px rgba(242, 194, 97, 0.12));
+}
+
+.modern-map-connector {
+    position: absolute;
+    z-index: 2;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 280ms ease, visibility 0s linear 280ms;
+}
+
+.modern-map-connector.is-active {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+.connector-guizhou { left: 307px; top: 311px; width: 46px; height: 46px; }
+.connector-hebei { left: 424px; top: 230px; width: 31px; height: 22px; transform: rotate(180deg) scaleY(-1); }
+.connector-zhejiang { left: 487px; top: 355px; width: 24px; height: 21px; transform: rotate(180deg); }
+
+.modern-map-mask-group {
+    position: absolute;
+    z-index: 3;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 280ms ease, filter 320ms ease, visibility 0s linear 280ms;
+}
+
+.modern-map-mask-group.is-active {
+    z-index: 4;
+    opacity: 1;
+    visibility: visible;
+    filter: brightness(1.1) drop-shadow(0 0 12px rgba(208, 154, 92, 0.32));
+    transition-delay: 0s;
+}
+
+.modern-map-mask,
+.modern-map-mask > img,
+.modern-map-mask-label,
+.mask-group-bg,
+.jiangxi-mask-bg {
+    position: absolute;
+    display: block;
+}
+
+.modern-map-mask {
+    overflow: hidden;
+    transform: scale(1);
+    transform-origin: center;
+    transition: transform 300ms var(--ease-origin), filter 300ms ease;
+}
+
+.modern-map-mask-group.is-active .modern-map-mask {
+    transform: scale(1.06);
+    filter: brightness(1.06);
+}
+
+.modern-map-mask > img {
+    max-width: none;
+}
+
+.modern-map-mask-label {
+    width: 12px;
+    color: rgba(229, 206, 173, 0.96);
+    font-family: "HYFangSongS", "FangSong", "Songti SC", STSong, serif;
+    font-size: 11px;
+    line-height: 12px;
+    text-align: center;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+}
+
+.mask-group-guizhou { left: 190px; top: 199px; width: 154px; height: 152px; overflow: hidden; }
+.mask-group-bg { left: 1px; top: 7px; width: 153px; height: 139px; }
+.mask-xianfeng { left: 20px; top: 9px; width: 38.883px; height: 70.313px; }
+.mask-xianfeng img { left: -82.75%; top: 0; width: 271.25%; height: 100%; }
+.label-xianfeng { left: 59px; top: 22px; height: 46px; }
+.mask-kaishan { left: 89px; top: 38px; width: 43px; height: 64px; }
+.mask-kaishan img { left: 0; top: -9.62%; width: 244.49%; height: 109.33%; }
+.label-kaishan { left: 132px; top: 47px; height: 52px; }
+.mask-huosheng { left: 37px; top: 73px; width: 40.073px; height: 70.047px; }
+.mask-huosheng img { left: 0; top: -0.04%; width: 262.4%; height: 100.08%; }
+.label-huosheng { left: 77px; top: 84px; height: 46px; }
+
+.mask-group-hebei {
+    left: 458px;
+    top: 164px;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(90deg, rgba(255, 254, 247, 0.23), rgba(132, 96, 96, 0.23));
+}
+.mask-datou { left: 9px; top: 0; width: 40px; height: 70px; }
+.mask-datou img { left: -71.68%; top: 0.43%; width: 262.36%; height: 99.95%; }
+.label-datou { left: 49px; top: 10px; height: 48px; }
+
+.mask-group-hubei {
+    left: 382px;
+    top: 264px;
+    width: 79px;
+    height: 76px;
+    overflow: hidden;
+    box-shadow: 0 4px 47.1px rgba(208, 154, 154, 0.37);
+}
+.mask-chenghuang { inset: 0; }
+.mask-chenghuang img { left: 20.03%; top: 15.57%; width: 61.71%; height: 63.89%; }
+.label-chenghuang { left: 10px; top: 8px; height: 48px; }
+
+.mask-group-zhejiang {
+    left: 512px;
+    top: 320px;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(90deg, rgba(255, 254, 247, 0.23), rgba(132, 96, 96, 0.23));
+}
+.mask-liuchoupo { left: 8px; top: 0; width: 42.623px; height: 70.059px; }
+.mask-liuchoupo img { left: 0; top: 0; width: 246.55%; height: 100%; }
+.label-liuchoupo { left: 51px; top: 12px; height: 46px; }
+
+.mask-group-jiangxi { left: 426px; top: 381px; width: 105px; height: 70px; }
+.jiangxi-mask-bg { left: 0; top: -2px; width: 105px; height: 89px; }
+.mask-leigong { left: 6px; top: 2px; width: 39.267px; height: 70.816px; }
+.mask-leigong img { left: -0.09%; top: 0; width: 270.52%; height: 100%; }
+.label-leigong { left: 46px; top: 6px; height: 36px; }
+
+.mask-group-yinjiao { left: 487px; top: 390px; width: 40.942px; height: 70.446px; }
+.mask-yinjiao { left: 0; top: 0; width: 40.942px; height: 70.446px; }
+.mask-yinjiao img { left: -0.5%; top: 2.7%; width: 258.3%; height: 100.08%; }
+.modern-map-standalone-label {
+    z-index: 4;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 280ms ease, visibility 0s linear 280ms;
+}
+.modern-map-standalone-label.is-active {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
+.label-yinjiao {
+    left: 483px;
+    top: 440px;
+    height: 46px;
+    text-align: start;
+}
+
+.modern-map-hotspot {
+    position: absolute;
+    z-index: 7;
+    width: 34px;
+    height: 34px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    color: rgba(239, 221, 180, 0.98);
+    background:
+        radial-gradient(circle at 31% 29%, rgba(255, 235, 176, 0.5) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 72% 67%, rgba(189, 125, 43, 0.36) 0 1px, transparent 1.7px),
+        radial-gradient(circle, rgba(153, 96, 29, 0.08), transparent 68%);
+    box-shadow: inset 0 0 8px rgba(122, 74, 22, 0.12);
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: filter 240ms ease, box-shadow 240ms ease;
+}
+
+.modern-map-hotspot::before,
+.modern-map-hotspot::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.modern-map-hotspot::before {
+    width: 7px;
+    height: 7px;
+    border: 1px solid rgba(246, 213, 145, 0.9);
+    background: radial-gradient(circle at 38% 35%, #fff4ce 0 18%, #d8a64d 45%, #6f431a 100%);
+    box-shadow: inset 0 0 0 1px rgba(255, 236, 184, 0.24), inset 0 0 3px rgba(75, 42, 10, 0.82), 0 0 5px rgba(255, 225, 156, 0.74), 0 0 11px rgba(176, 107, 28, 0.56);
+}
+
+.modern-map-hotspot::after {
+    width: 22px;
+    height: 22px;
+    border: 1px solid rgba(213, 164, 77, 0.72);
+    background: radial-gradient(circle, rgba(210, 145, 43, 0.12), rgba(93, 53, 15, 0.02) 62%);
+    box-shadow: inset 0 0 0 1px rgba(246, 210, 136, 0.14), inset 0 0 0 3px rgba(94, 58, 20, 0.18), 0 0 7px rgba(176, 111, 29, 0.4);
+    animation: modern-map-pulse 3.4s ease-in-out infinite;
+}
+
+.modern-map-hotspot span {
+    position: absolute;
+    left: 50%;
+    bottom: 28px;
+    padding: 1px 5px 2px;
+    border: 1px solid rgba(202, 168, 110, 0.16);
+    border-radius: 4px;
+    background: rgba(14, 12, 9, 0.7);
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.4);
+    font-family: "Songti SC", STSong, serif;
+    font-size: 10px;
+    line-height: 15px;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    opacity: 0.68;
+    transform: translateX(-50%);
+    transition: opacity 240ms ease, color 240ms ease, border-color 240ms ease;
+}
+
+.modern-map-hotspot:hover span,
+.modern-map-hotspot:focus-visible span,
+.modern-map-hotspot.is-active span {
+    color: #fff4d2;
+    border-color: rgba(237, 202, 146, 0.5);
+    opacity: 1;
+}
+
+.modern-map-hotspot:hover,
+.modern-map-hotspot:focus-visible {
+    filter: brightness(1.12);
+    box-shadow: inset 0 0 8px rgba(173, 111, 34, 0.2), 0 0 8px rgba(196, 132, 45, 0.14);
+}
+
+.modern-map-hotspot:focus-visible { outline: none; }
+.modern-map-hotspot.is-active {
+    filter: brightness(1.16);
+    box-shadow: inset 0 0 9px rgba(196, 129, 38, 0.24), 0 0 10px rgba(224, 165, 73, 0.18);
+}
+.modern-map-hotspot.is-active::before { background: #fff6d8; filter: brightness(1.22); }
+.modern-map-hotspot.is-active::after {
+    border-color: rgba(255, 215, 126, 0.92);
+    box-shadow: inset 0 0 0 2px rgba(130, 76, 20, 0.28), 0 0 9px rgba(220, 159, 62, 0.5);
+    animation-duration: 1.8s;
+}
+
+.hotspot-guizhou { left: 56.07%; top: 75.26%; }
+.hotspot-jiangxi { left: 66.40%; top: 78.36%; }
+.hotspot-hubei { left: 60.85%; top: 69.05%; }
+.hotspot-zhejiang { left: 77%; top: 73.87%; }
+.hotspot-hebei { left: 66.80%; top: 52.33%; }
+
+@keyframes modern-map-pulse {
+    0%, 100% { opacity: 0.42; transform: translate(-50%, -50%) scale(0.88); }
+    50% { opacity: 0.96; transform: translate(-50%, -50%) scale(1.12); }
+}
+
+.modern-map-card {
+    position: absolute;
+    left: 770px;
+    top: 205px;
+    z-index: 9;
+    width: 219px;
+    height: 373px;
+    padding: 34px 16px;
+    overflow: hidden;
+    border: 1px solid rgba(202, 171, 126, 0.1);
+    border-radius: 11px;
+    background: rgba(19, 19, 19, 0.47);
+    box-shadow: 0 0 12.9px rgba(202, 171, 126, 0.34);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(8px) scale(0.985);
+    transition: opacity 240ms ease, transform 240ms ease, box-shadow 240ms ease, visibility 0s linear 240ms;
+}
+
+.modern-map-card:not(.is-visible) .modern-map-card__title,
+.modern-map-card:not(.is-visible) .modern-map-card__rule,
+.modern-map-card:not(.is-visible) .modern-map-card__description {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.modern-map-card.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+    box-shadow: 0 0 12.9px rgba(202, 171, 126, 0.34), inset 0 0 24px rgba(154, 104, 42, 0.04);
+    transition-delay: 0s;
+}
+
+.modern-map-card.is-switching {
+    opacity: 0.18;
+    transform: translateY(3px);
+}
+
+.modern-map-card__title {
+    width: 187px;
+    height: 115px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 10px;
+    color: #fff;
+    font-family: "Huiwen-mincho", "Songti SC", STSong, serif;
+}
+
+.modern-map-card__title h3 {
+    margin: 0 0 8px;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.modern-map-card__title ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.modern-map-card__title li {
+    position: relative;
+    margin: 0 0 5px;
+    padding-left: 12px;
+    font-size: 20px;
+    line-height: 1.05;
+    white-space: nowrap;
+}
+
+.modern-map-card__title li::before {
+    content: "·";
+    position: absolute;
+    left: 0;
+    top: -1px;
+    font-size: 28px;
+}
+
+.modern-map-card__rule {
+    width: 186px;
+    height: 1px;
+    margin: 10px 0;
+    border-radius: 1px;
+    background: rgba(202, 168, 110, 0.28);
+}
+
+.modern-map-card__description {
+    width: 187px;
+    height: 171px;
+    margin: 0;
+    overflow: hidden;
+    color: rgba(229, 206, 173, 0.96);
+    font-family: "Huiwen-mincho", "Songti SC", STSong, serif;
+    font-size: 15px;
+    line-height: 19px;
+    text-align: justify;
+}
+
+.modern-map-card.is-compact .modern-map-card__description {
+    font-size: 13.5px;
+    line-height: 17px;
+}
+
+.modern-map-card.is-compact .modern-map-card__title li {
+    font-size: 18px;
+}
+
+.is-image-missing {
+    background: rgba(47, 29, 20, 0.72);
+    border: 1px solid rgba(237, 202, 146, 0.25);
+}
+
+.is-image-missing::after {
+    content: "素材暂缺";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: rgba(237, 202, 146, 0.55);
+    font-size: 14px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .timeline-vector,
+    .origin-scroll-layer,
+    .era,
+    .era-marker,
+    .detail-bubble,
+    .danuo-overlay,
+    .danuo-expanded,
+    .modern-map-modal,
+    .modern-map-modal__panel,
+    .modern-map-connector,
+    .modern-map-mask-group,
+    .modern-map-standalone-label,
+    .modern-map-card {
+        transition-duration: 1ms !important;
+    }
+
+    .danuo-hotspot,
+    .modern-map-hotspot::after,
+    .timeline-arrow-right.is-continue-ready,
+    .origin-stage.is-three-senses-ready .timeline-next-hint,
+    .origin-stage.is-leaving-to-three-senses {
+        animation: none;
+    }
+
+    .era-modern.is-current .modern-map > img {
+        animation: none;
+    }
+}

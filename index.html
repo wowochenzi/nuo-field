@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>傩场 NuoField | 总流程入口</title>
+    <style>
+      :root {
+        --eye-open: 0.4%;
+        color: #eadcc2;
+        background: #000;
+        font-family: "HYFangSongS", "FangSong", "Songti SC", serif;
+      }
+
+      @property --eye-open {
+        syntax: "<percentage>";
+        inherits: true;
+        initial-value: 0.4%;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #000;
+      }
+
+      .journey-shell {
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+        isolation: isolate;
+        background: #000;
+      }
+
+      .journey-frame {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: #000;
+        transition:
+          opacity 900ms ease,
+          filter 900ms ease;
+      }
+
+      #openingFrame {
+        z-index: 2;
+        opacity: 1;
+      }
+
+      #muralFrame {
+        z-index: 1;
+        opacity: 0;
+        pointer-events: none;
+        filter: brightness(0.72);
+      }
+
+      body.is-mural-active #openingFrame {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      body.is-mural-active #muralFrame {
+        opacity: 1;
+        pointer-events: auto;
+        filter: brightness(1);
+      }
+
+      .journey-mask-vision {
+        position: fixed;
+        inset: 0;
+        z-index: 4;
+        pointer-events: none;
+        opacity: 0;
+        background: url("assets/opening/mask-eye-viewport.png") center / cover no-repeat;
+        filter: brightness(0.92) contrast(1.06);
+        transition: opacity 900ms ease;
+      }
+
+      body.is-mural-active .journey-mask-vision {
+        opacity: 1;
+      }
+
+      body.is-eye-closed .journey-mask-vision,
+      body.is-eye-opening .journey-mask-vision {
+        opacity: 0;
+      }
+
+      .eye-transition {
+        position: fixed;
+        inset: 0;
+        z-index: 8;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        padding: 0;
+        opacity: 0;
+        pointer-events: none;
+        overflow: hidden;
+        color: rgba(229, 206, 173, 0.92);
+        background: transparent;
+        font: inherit;
+        cursor: pointer;
+        transition:
+          opacity 360ms ease,
+          --eye-open 760ms cubic-bezier(0.74, 0, 0.26, 1);
+      }
+
+      .eye-transition::before {
+        content: "";
+        position: absolute;
+        inset: -4%;
+        background: #000;
+        -webkit-mask-image: radial-gradient(
+          ellipse 54% var(--eye-open) at 50% 50%,
+          transparent 0 54%,
+          rgba(0, 0, 0, 0.35) 66%,
+          #000 84%
+        );
+        mask-image: radial-gradient(
+          ellipse 54% var(--eye-open) at 50% 50%,
+          transparent 0 54%,
+          rgba(0, 0, 0, 0.35) 66%,
+          #000 84%
+        );
+      }
+
+      .eye-transition::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 50% 50%, rgba(230, 200, 136, 0.12), transparent 24%),
+          radial-gradient(circle at 50% 48%, rgba(0, 0, 0, 0), #000 64%);
+        opacity: 0.55;
+      }
+
+      .eye-transition span {
+        position: absolute;
+        left: 50%;
+        bottom: 9vh;
+        z-index: 2;
+        transform: translateX(-50%);
+        font-family: "Huiwen-mincho", "Songti SC", "STSong", serif;
+        font-size: clamp(16px, 1.6vw, 26px);
+        letter-spacing: 0.18em;
+        text-shadow: 0 0 14px rgba(230, 200, 136, 0.5);
+      }
+
+      body.is-eye-closed .eye-transition,
+      body.is-eye-opening .eye-transition {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      body.is-eye-closed {
+        --eye-open: 0.4%;
+      }
+
+      body.is-eye-opening {
+        --eye-open: 32%;
+      }
+
+      body.is-eye-opening .eye-transition span {
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="journey-shell" aria-label="傩场总流程">
+      <iframe
+        class="journey-frame"
+        id="openingFrame"
+        title="傩场开场交互"
+        src="opening.html?journey=1"
+        allow="autoplay; camera; microphone; fullscreen"
+      ></iframe>
+      <iframe class="journey-frame" id="muralFrame" title="壁画火把交互" allow="autoplay; camera; microphone; fullscreen"></iframe>
+      <div class="journey-mask-vision" aria-hidden="true"></div>
+      <button class="eye-transition" id="eyeTransition" type="button" aria-label="点击睁眼进入傩场引入">
+        <span>点击睁眼</span>
+      </button>
+    </main>
+
+    <script>
+      const openingFrame = document.getElementById("openingFrame");
+      const muralFrame = document.getElementById("muralFrame");
+      const eyeTransition = document.getElementById("eyeTransition");
+      const muralSrc = "pages/mural.html?journey=1";
+      const projectIntroSrc = "home.html";
+      let muralLoaded = false;
+      let openingFadeStarted = false;
+      let finalTransitionStarted = false;
+
+      function showMural() {
+        if (!muralLoaded) {
+          muralFrame.src = muralSrc;
+          muralLoaded = true;
+        }
+        document.body.classList.add("is-mural-active");
+      }
+
+      function fadeOpeningBgm(duration) {
+        if (openingFadeStarted) return;
+        openingFadeStarted = true;
+        try {
+          openingFrame.contentWindow?.NuoOpeningBridge?.fadeOutBgmForJourney(duration);
+        } catch {}
+      }
+
+      function beginEyeTransition() {
+        if (finalTransitionStarted) return;
+        finalTransitionStarted = true;
+        fadeOpeningBgm(1200);
+        window.setTimeout(() => {
+          document.body.classList.add("is-eye-closed");
+          eyeTransition.focus({ preventScroll: true });
+        }, 1050);
+      }
+
+      window.addEventListener("message", (event) => {
+        if (!event.data || typeof event.data.type !== "string") return;
+        if (event.data.type === "nuo-opening-complete") {
+          showMural();
+          return;
+        }
+        if (event.data.type === "nuo-mural-torch-picked") {
+          fadeOpeningBgm(16250);
+          return;
+        }
+        if (event.data.type === "nuo-mural-blackout") {
+          beginEyeTransition();
+        }
+      });
+
+      eyeTransition.addEventListener("click", () => {
+        if (!document.body.classList.contains("is-eye-closed")) return;
+        document.body.classList.remove("is-eye-closed");
+        document.body.classList.add("is-eye-opening");
+        localStorage.setItem("nuoBgMusic", "playing");
+        localStorage.setItem("nuoBgMusicTime", "0");
+        window.setTimeout(() => {
+          window.location.href = projectIntroSrc;
+        }, 920);
+      });
+    </script>
+  </body>
+</html>

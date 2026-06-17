@@ -1,0 +1,1389 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>傩场 | 开场交互</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./assets/vendor/three/build/three.module.js",
+          "three/addons/": "./assets/vendor/three/examples/jsm/"
+        }
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <style>
+      :root {
+        --text: #eadcc2;
+        --gold: #e6c888;
+        --soft: rgba(234, 220, 194, 0.68);
+        --blackout: 0;
+        --hold: 0;
+        --hand-x: 50vw;
+        --hand-y: 50vh;
+        --hand-scale: 1;
+        --model-status-opacity: 0;
+        --eye-open: 0.4%;
+      }
+
+      @property --eye-open {
+        syntax: "<percentage>";
+        inherits: true;
+        initial-value: 0.4%;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #000;
+        color: var(--text);
+        font-family: "HYFangSongS", "FangSong", "Songti SC", serif;
+      }
+
+      button {
+        border: 0;
+        padding: 0;
+        font: inherit;
+        color: inherit;
+        background: transparent;
+      }
+
+      .opening {
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+        isolation: isolate;
+        background: #000;
+      }
+
+      .frame-stage {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        background: #000;
+        transform-origin: 50% 52%;
+      }
+
+      .frame-stage.is-camera-shake {
+        animation: cameraShake 720ms ease both;
+      }
+
+      .frame-stage.is-walking {
+        animation: walkingShake 980ms ease both;
+      }
+
+      .figma-frame {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        pointer-events: none;
+        opacity: 0;
+        transform: scale(1.018);
+        transition:
+          opacity 760ms ease,
+          transform 1100ms cubic-bezier(0.2, 0.8, 0.2, 1);
+        user-select: none;
+        -webkit-user-drag: none;
+      }
+
+      .figma-frame.is-active {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .bottom-hint-frame {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 44;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100vw;
+        height: clamp(64px, 6.1vw, 124px);
+        padding: 8px clamp(20px, 3.65vw, 61px);
+        background: rgba(226, 221, 202, 0.09);
+        color: rgba(229, 206, 173, 0.96);
+        font-family: "Huiwen-mincho", "Songti SC", "STSong", serif;
+        line-height: 1;
+        text-align: center;
+        text-shadow: 0 0 4px #f7e392;
+        word-break: break-word;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 420ms ease;
+        user-select: none;
+      }
+
+      .bottom-hint-frame.is-active {
+        opacity: 1;
+      }
+
+      .bottom-hint-main {
+        width: 100%;
+        margin: 0;
+        font-size: clamp(22px, 1.92vw, 32px);
+        line-height: 1;
+      }
+
+      .bottom-hint-sub {
+        width: 100%;
+        margin: 0;
+        font-size: clamp(10px, 0.78vw, 13px);
+        line-height: 1.2;
+      }
+
+      body[data-eye] .bottom-hint-frame {
+        opacity: 0;
+      }
+
+      .boot-black,
+      .blackout {
+        position: fixed;
+        inset: 0;
+        z-index: 80;
+        pointer-events: none;
+        background: #000;
+      }
+
+      .boot-black {
+        animation: bootFade 2300ms ease forwards;
+      }
+
+      .blackout {
+        z-index: 70;
+        opacity: var(--blackout);
+        transition: opacity 380ms linear;
+      }
+
+      body[data-eye="open"] .frame-stage {
+        filter: blur(3px) brightness(0.38) saturate(0.68);
+      }
+
+      body[data-eye="closed"] .figma-frame[data-state="wear"],
+      body[data-eye="final"] .figma-frame[data-state="wear"] {
+        opacity: 0;
+      }
+
+      body[data-eye="open"] .model-scene,
+      body[data-eye="closed"] .model-scene,
+      body[data-eye="final"] .model-scene {
+        opacity: 0 !important;
+        pointer-events: none;
+      }
+
+      .eye-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 76;
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+        background: transparent;
+        transition:
+          opacity 120ms ease,
+          --eye-open 500ms cubic-bezier(0.74, 0, 0.26, 1);
+      }
+
+      body[data-eye="closed"] .eye-overlay,
+      body[data-eye="open"] .eye-overlay,
+      body[data-eye="final"] .eye-overlay {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .eye-overlay::before {
+        content: "";
+        position: absolute;
+        inset: -4%;
+        z-index: 1;
+        background: #000;
+        -webkit-mask-image: radial-gradient(
+          ellipse 54% var(--eye-open) at 50% 50%,
+          transparent 0 54%,
+          rgba(0, 0, 0, 0.35) 66%,
+          #000 84%
+        );
+        mask-image: radial-gradient(
+          ellipse 54% var(--eye-open) at 50% 50%,
+          transparent 0 54%,
+          rgba(0, 0, 0, 0.35) 66%,
+          #000 84%
+        );
+      }
+
+      .eye-lid {
+        display: none;
+      }
+
+      body[data-eye="open"] {
+        --eye-open: 28%;
+      }
+
+      body[data-eye="closed"],
+      body[data-eye="final"] {
+        --eye-open: 0.4%;
+      }
+
+      .mask-vision {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        opacity: 0;
+        pointer-events: none;
+        background:
+          url("assets/opening/mask-eye-viewport.png") center / cover no-repeat;
+        filter: brightness(0.92) contrast(1.06);
+        transition: opacity 500ms ease;
+      }
+
+      body[data-eye="open"] .mask-vision {
+        opacity: 1;
+      }
+
+      .eye-hint {
+        position: absolute;
+        left: 50%;
+        bottom: 9vh;
+        z-index: 2;
+        transform: translateX(-50%);
+        color: rgba(236, 205, 139, 0.82);
+        font-size: clamp(0.8rem, 1.15vw, 1rem);
+        letter-spacing: 0;
+        text-shadow: 0 2px 18px #000;
+        opacity: 0;
+        transition: opacity 180ms ease;
+      }
+
+      body[data-eye="closed"] .eye-hint,
+      body[data-eye="open"] .eye-hint {
+        opacity: 1;
+      }
+
+      .hotspot {
+        position: absolute;
+        z-index: 46;
+        cursor: pointer;
+      }
+
+      .hotspot-prompt {
+        left: 52.6%;
+        top: 59.7%;
+        width: min(14vw, 210px);
+        min-width: 116px;
+        aspect-ratio: 1;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+      }
+
+      .hotspot-prompt::before,
+      .hotspot-mask::before,
+      .wear-target::before {
+        content: "";
+        position: absolute;
+        inset: 20%;
+        border-radius: 50%;
+        background: rgba(236, 205, 139, 0.14);
+        box-shadow:
+          0 0 0 1px rgba(236, 205, 139, 0.25),
+          0 0 34px rgba(236, 205, 139, 0.36);
+        animation: cuePulse 1450ms ease-out infinite;
+      }
+
+      .hotspot-mask {
+        left: 50.2%;
+        top: 61.7%;
+        width: min(19vw, 300px);
+        min-width: 180px;
+        aspect-ratio: 1.1;
+        transform: translate(-50%, -50%);
+        border-radius: 48%;
+      }
+
+      .hotspot-mask::before {
+        inset: 18%;
+      }
+
+      .hotspot[hidden] {
+        display: none;
+      }
+
+      .state-label {
+        position: absolute;
+        left: clamp(20px, 3.2vw, 48px);
+        top: clamp(18px, 3.6vh, 44px);
+        z-index: 35;
+        display: none;
+        gap: 8px;
+        pointer-events: none;
+        color: var(--soft);
+        text-shadow: 0 2px 14px rgba(0, 0, 0, 0.72);
+      }
+
+      .state-label strong {
+        color: var(--gold);
+        font-family: "Huiwen-mincho", "Songti SC", serif;
+        font-size: clamp(1rem, 2vw, 1.7rem);
+        font-weight: 400;
+        letter-spacing: 0;
+      }
+
+      .state-label span {
+        font-size: clamp(0.75rem, 1.15vw, 1rem);
+      }
+
+      .gesture-frame {
+        position: fixed;
+        left: var(--hand-x);
+        top: var(--hand-y);
+        z-index: 38;
+        width: clamp(58px, 6.5vw, 86px);
+        aspect-ratio: 138 / 183;
+        transform: translate(-50%, -50%) scale(calc(var(--hand-scale) * 0.9));
+        opacity: 0;
+        pointer-events: none;
+        filter:
+          drop-shadow(0 0 12px rgba(236, 205, 139, 0.72))
+          drop-shadow(0 10px 18px rgba(0, 0, 0, 0.38));
+        transition:
+          opacity 220ms ease,
+          transform 220ms ease;
+      }
+
+      .gesture-frame.is-active {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(var(--hand-scale));
+      }
+
+      .gesture-frame img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        opacity: 0.82;
+      }
+
+      .hold-meter {
+        position: absolute;
+        left: 50.2%;
+        top: 61.7%;
+        z-index: 34;
+        width: min(24vw, 360px);
+        min-width: 210px;
+        aspect-ratio: 1;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        opacity: 0;
+        pointer-events: none;
+        background:
+          conic-gradient(rgba(236, 205, 139, 0.96) calc(var(--hold) * 1turn), rgba(236, 205, 139, 0.12) 0),
+          radial-gradient(circle, transparent 64%, rgba(0, 0, 0, 0.74) 65%);
+        mask: radial-gradient(circle, transparent 64%, #000 65%);
+        transition: opacity 240ms ease;
+      }
+
+      body[data-state="shot4"] .hold-meter {
+        opacity: 0.86;
+      }
+
+      .model-scene {
+        position: absolute;
+        inset: 0;
+        z-index: 18;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 650ms ease;
+      }
+
+      body[data-state="wear"] .model-scene {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .camera-video,
+      .model-canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .camera-video {
+        object-fit: cover;
+        opacity: 0;
+        transform: scaleX(-1);
+        filter: sepia(0.72) brightness(0.48) contrast(1.28);
+        pointer-events: none;
+      }
+
+      .model-canvas {
+        z-index: 3;
+      }
+
+      .wear-target {
+        position: absolute;
+        left: 50%;
+        top: 40%;
+        z-index: 32;
+        width: min(24vw, 280px);
+        min-width: 170px;
+        aspect-ratio: 0.78;
+        transform: translate(-50%, -50%);
+        border-radius: 48% 48% 43% 43%;
+        border: 1px solid rgba(236, 205, 139, 0.24);
+        opacity: 0.58;
+        pointer-events: none;
+        box-shadow: 0 0 38px rgba(236, 205, 139, 0.12);
+      }
+
+      .wear-target::before {
+        inset: 30%;
+      }
+
+      .model-status {
+        position: absolute;
+        left: 50%;
+        top: 58%;
+        z-index: 36;
+        width: min(52vw, 560px);
+        transform: translate(-50%, -50%);
+        color: rgba(242, 217, 161, 0.9);
+        font-size: clamp(0.82rem, 1.18vw, 1rem);
+        line-height: 1.7;
+        text-align: center;
+        text-shadow: 0 2px 16px rgba(0, 0, 0, 0.88);
+        opacity: var(--model-status-opacity);
+        pointer-events: none;
+        transition: opacity 260ms ease;
+      }
+
+      .model-fallback {
+        position: absolute;
+        left: 50%;
+        top: 49%;
+        z-index: 4;
+        width: min(30vw, 360px);
+        min-width: 210px;
+        object-fit: contain;
+        opacity: 0;
+        transform:
+          translate(-50%, -50%)
+          perspective(860px)
+          rotateY(var(--fallback-rotate, 0deg))
+          scale(var(--fallback-scale, 1));
+        filter:
+          drop-shadow(0 0 28px rgba(236, 205, 139, 0.22))
+          drop-shadow(0 18px 26px rgba(0, 0, 0, 0.55));
+        pointer-events: none;
+        transition: opacity 360ms ease;
+      }
+
+      body[data-state="wear"] .model-fallback.is-visible {
+        opacity: 1;
+      }
+
+      .music-toggle {
+        position: fixed;
+        left: clamp(16px, 2vw, 30px);
+        bottom: clamp(16px, 2vw, 30px);
+        z-index: 88;
+        display: grid;
+        place-items: center;
+        width: clamp(42px, 3.7vw, 56px);
+        aspect-ratio: 1;
+        border: 1px solid rgba(230, 200, 136, 0.58);
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 50% 42%, rgba(230, 200, 136, 0.18), transparent 62%),
+          rgba(12, 8, 5, 0.72);
+        color: rgba(242, 217, 161, 0.92);
+        font-family: "Huiwen-mincho", "Songti SC", "STSong", serif;
+        font-size: clamp(20px, 1.75vw, 28px);
+        line-height: 1;
+        text-shadow: 0 0 10px rgba(247, 227, 146, 0.66);
+        box-shadow:
+          0 0 0 1px rgba(0, 0, 0, 0.42),
+          0 0 22px rgba(230, 200, 136, 0.16);
+        cursor: pointer;
+        opacity: 0.72;
+        transition:
+          opacity 180ms ease,
+          border-color 180ms ease,
+          box-shadow 180ms ease,
+          transform 180ms ease;
+      }
+
+      .music-toggle:hover,
+      .music-toggle:focus-visible,
+      .music-toggle.is-playing {
+        opacity: 1;
+        border-color: rgba(242, 217, 161, 0.92);
+        box-shadow:
+          0 0 0 1px rgba(0, 0, 0, 0.42),
+          0 0 30px rgba(230, 200, 136, 0.34);
+      }
+
+      .music-toggle:active {
+        transform: scale(0.94);
+      }
+
+      @keyframes bootFade {
+        0%,
+        58% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
+
+      @keyframes cuePulse {
+        0% {
+          opacity: 0.95;
+          transform: scale(0.74);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(1.9);
+        }
+      }
+
+      @keyframes cameraShake {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        22% {
+          transform: translate3d(-10px, 5px, 0) scale(1.012);
+        }
+        48% {
+          transform: translate3d(8px, -4px, 0) scale(1.018);
+        }
+        70% {
+          transform: translate3d(-5px, -5px, 0) scale(1.01);
+        }
+      }
+
+      @keyframes walkingShake {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        18% {
+          transform: translate3d(7px, -5px, 0) scale(1.017);
+        }
+        36% {
+          transform: translate3d(-8px, 6px, 0) scale(1.028);
+        }
+        58% {
+          transform: translate3d(6px, -7px, 0) scale(1.035);
+        }
+        78% {
+          transform: translate3d(-5px, 4px, 0) scale(1.022);
+        }
+      }
+
+      @media (max-width: 760px) {
+        .hotspot-prompt {
+          width: 20vw;
+        }
+
+        .hotspot-mask,
+        .hold-meter {
+          left: 50.2%;
+          top: 62%;
+          width: 42vw;
+        }
+
+        .state-label {
+          max-width: 58vw;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 1ms !important;
+          transition-duration: 1ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body data-state="door-closed">
+    <main class="opening" aria-label="傩场开场交互">
+      <section class="frame-stage" id="frameStage">
+        <img class="figma-frame is-active" data-state="door-closed" src="assets/opening/01-door-closed.png" alt="门闭合" />
+        <img class="figma-frame" data-state="door-ajar" src="assets/opening/02-door-ajar.png" alt="门微张" />
+        <img class="figma-frame" data-state="door-open" src="assets/opening/03-door-open.png" alt="门开" />
+        <img class="figma-frame" data-state="shot1" src="assets/opening/04-shot-1.png" alt="镜头1" />
+        <img class="figma-frame" data-state="shot2" src="assets/opening/05-shot-2.png" alt="镜头2" />
+        <img class="figma-frame" data-state="shot3" src="assets/opening/06-shot-3.png" alt="镜头3" />
+        <img class="figma-frame" data-state="shot4" src="assets/opening/07-shot-4.png" alt="镜头4" />
+        <img class="figma-frame" data-state="wear" src="assets/opening/08-wear-mask.png" alt="手持面具戴面具" />
+
+        <section class="model-scene" aria-label="面具模型佩戴模拟">
+          <video class="camera-video" id="cameraVideo" playsinline muted autoplay></video>
+          <canvas class="model-canvas" id="modelCanvas"></canvas>
+          <img class="model-fallback" id="modelFallback" src="assets/images/masks/guizhou-kaishan-mangjiang.png" alt="" />
+          <div class="wear-target" aria-hidden="true"></div>
+          <div class="model-status" id="modelStatus" aria-live="polite"></div>
+        </section>
+      </section>
+
+      <button class="hotspot hotspot-prompt" id="promptHotspot" type="button" aria-label="点击提示符号"></button>
+      <button class="hotspot hotspot-mask" id="maskHotspot" type="button" aria-label="触碰画面中心面具" hidden></button>
+      <div class="hold-meter" id="holdMeter" aria-hidden="true"></div>
+
+      <div class="bottom-hint-frame is-active" data-hint-state="door-closed" aria-hidden="true">
+        <p class="bottom-hint-main">（点击提示或滚动）</p>
+      </div>
+      <div class="bottom-hint-frame" data-hint-state="door-ajar" aria-hidden="true">
+        <p class="bottom-hint-main">（点击提示或滚动）</p>
+      </div>
+      <div class="bottom-hint-frame" data-hint-state="door-open" aria-hidden="true">
+        <p class="bottom-hint-main">“进去看看。”</p>
+      </div>
+      <div class="bottom-hint-frame" data-hint-state="shot1" aria-hidden="true">
+        <p class="bottom-hint-main">“那是什么？”</p>
+      </div>
+      <div class="bottom-hint-frame" data-hint-state="shot2" aria-hidden="true">
+        <p class="bottom-hint-main">“一个面具。”</p>
+      </div>
+      <div class="bottom-hint-frame" data-hint-state="shot3" aria-hidden="true">
+        <p class="bottom-hint-main">“戴上看看。”</p>
+        <p class="bottom-hint-sub">（请伸出右手拾取面具）</p>
+      </div>
+      <div class="bottom-hint-frame" data-hint-state="shot4" aria-hidden="true">
+        <p class="bottom-hint-main">“戴上看看。”</p>
+        <p class="bottom-hint-sub">（将右手在面具处停留2秒）</p>
+      </div>
+      <div class="bottom-hint-frame" data-hint-state="wear" aria-hidden="true">
+        <p class="bottom-hint-main">“戴上看看。”</p>
+        <p class="bottom-hint-sub">（手持面具靠近面部）</p>
+      </div>
+
+      <div class="gesture-frame" id="gestureFrame" aria-hidden="true">
+        <img src="assets/opening/grab-gesture-frame.png" alt="" />
+      </div>
+
+      <div class="state-label" aria-live="polite">
+        <strong id="stateName">门闭合</strong>
+        <span id="stateHint">点击提示符号，推开傩门</span>
+      </div>
+
+      <div class="boot-black" aria-hidden="true"></div>
+      <div class="blackout" aria-hidden="true"></div>
+      <audio
+        id="openingBgm"
+        preload="auto"
+        autoplay
+        loop
+        data-standalone-src="assets/audio/opening-bgm.mp3"
+        data-embedded-src="assets/audio/opening-bgm.mp3"
+      ></audio>
+      <button class="music-toggle" id="musicToggle" type="button" aria-label="播放背景音乐" aria-pressed="false" title="暂停/播放背景音乐">乐</button>
+      <button class="eye-overlay" id="eyeOverlay" type="button" aria-label="睁眼或闭眼">
+        <span class="mask-vision" aria-hidden="true"></span>
+        <span class="eye-lid eye-lid-top" aria-hidden="true"></span>
+        <span class="eye-lid eye-lid-bottom" aria-hidden="true"></span>
+        <span class="eye-hint" id="eyeHint">点击睁眼</span>
+      </button>
+    </main>
+
+    <script type="module">
+      const root = document.documentElement;
+      const body = document.body;
+      const stage = document.getElementById("frameStage");
+      const promptHotspot = document.getElementById("promptHotspot");
+      const maskHotspot = document.getElementById("maskHotspot");
+      const gestureFrame = document.getElementById("gestureFrame");
+      const holdMeter = document.getElementById("holdMeter");
+      const stateName = document.getElementById("stateName");
+      const stateHint = document.getElementById("stateHint");
+      const modelCanvas = document.getElementById("modelCanvas");
+      const modelFallback = document.getElementById("modelFallback");
+      const modelStatus = document.getElementById("modelStatus");
+      const cameraVideo = document.getElementById("cameraVideo");
+      const eyeOverlay = document.getElementById("eyeOverlay");
+      const eyeHint = document.getElementById("eyeHint");
+      const openingBgm = document.getElementById("openingBgm");
+      const musicToggle = document.getElementById("musicToggle");
+      const openingParams = new URLSearchParams(window.location.search);
+      const isJourneyMode = openingParams.get("journey") === "1" && window.parent !== window;
+      openingBgm.src = openingBgm.dataset.embeddedSrc || openingBgm.dataset.standaloneSrc;
+
+      const states = {
+        "door-closed": { name: "门闭合", hint: "点击提示符号，推开傩门" },
+        "door-ajar": { name: "门微张", hint: "傩门正在开启" },
+        "door-open": { name: "门开", hint: "点击提示符号，进入傩场" },
+        shot1: { name: "镜头1", hint: "继续点击提示符号，向室内走近" },
+        shot2: { name: "镜头2", hint: "继续点击提示符号，靠近桌案" },
+        shot3: { name: "镜头3", hint: "抓取手势触碰画面中心面具" },
+        shot4: { name: "镜头4", hint: "抓取手势停留 2 秒" },
+        wear: { name: "戴面", hint: "保持抓取手势，将手势逐渐远离镜头" }
+      };
+
+      let current = "door-closed";
+      let isTransitioning = false;
+      let pointer = { x: innerWidth * 0.5, y: innerHeight * 0.58, active: false };
+      let holdStartedAt = 0;
+      let holdProgress = 0;
+      let wearDepth = 0;
+      let wearStartedAt = 0;
+      let stream = null;
+      let three = null;
+      let threeModules = null;
+      let threeLoadingPromise = null;
+      let modelLoadFailed = false;
+      const maskBackRotationY = Math.PI * 0.5;
+      let hands = null;
+      let handTracking = false;
+      let cameraStarting = false;
+      let lastVideoTime = -1;
+      let lastHandSeenAt = 0;
+      let controlMode = "mouse";
+      let handScale = 1;
+      let handBoxSize = 0;
+      let wearBaseHandBoxSize = 0;
+      let eyeState = "idle";
+      let bgmFadeFrame = 0;
+      let bgmRequested = false;
+      let bgmAutoArmed = true;
+      let bgmManualPaused = false;
+      const bgmTargetVolume = 0.72;
+      const bgmFadeInMs = 2200;
+      const bgmFadeOutMs = 2600;
+
+      function clampAudioVolume(volume) {
+        return Math.max(0, Math.min(1, Number(volume) || 0));
+      }
+
+      function updateMusicToggle() {
+        const isPlaying = bgmRequested && !openingBgm.paused;
+        musicToggle.classList.toggle("is-playing", isPlaying);
+        musicToggle.setAttribute("aria-pressed", isPlaying ? "true" : "false");
+        musicToggle.setAttribute("aria-label", isPlaying ? "暂停背景音乐" : "播放背景音乐");
+      }
+
+      function fadeBgm(toVolume, duration, afterFade) {
+        cancelAnimationFrame(bgmFadeFrame);
+        const fromVolume = openingBgm.volume;
+        const startedAt = performance.now();
+        const step = (time) => {
+          const progress = Math.min(1, (time - startedAt) / Math.max(1, duration));
+          const eased = 1 - Math.pow(1 - progress, 3);
+          openingBgm.volume = clampAudioVolume(fromVolume + (toVolume - fromVolume) * eased);
+          if (progress < 1) {
+            bgmFadeFrame = requestAnimationFrame(step);
+            return;
+          }
+          bgmFadeFrame = 0;
+          openingBgm.volume = clampAudioVolume(toVolume);
+          afterFade?.();
+          updateMusicToggle();
+        };
+        bgmFadeFrame = requestAnimationFrame(step);
+      }
+
+      function playBgm(fade = true) {
+        bgmRequested = true;
+        bgmManualPaused = false;
+        openingBgm.muted = false;
+        if (openingBgm.paused) openingBgm.volume = fade ? 0 : bgmTargetVolume;
+        const playAttempt = openingBgm.paused ? openingBgm.play() : Promise.resolve();
+        playAttempt
+          .then(() => {
+            bgmAutoArmed = false;
+            updateMusicToggle();
+            fadeBgm(bgmTargetVolume, fade ? bgmFadeInMs : 1);
+          })
+          .catch(() => {
+            bgmRequested = false;
+            bgmAutoArmed = true;
+            updateMusicToggle();
+          });
+      }
+
+      function pauseBgm(fade = true, manual = true) {
+        bgmRequested = false;
+        if (manual) bgmManualPaused = true;
+        if (openingBgm.paused) {
+          updateMusicToggle();
+          return;
+        }
+        fadeBgm(0, fade ? 700 : 1, () => {
+          openingBgm.pause();
+        });
+      }
+
+      function fadeOutBgmForEnding() {
+        bgmRequested = false;
+        bgmManualPaused = false;
+        bgmAutoArmed = false;
+        if (openingBgm.paused) {
+          updateMusicToggle();
+          return;
+        }
+        fadeBgm(0, bgmFadeOutMs, () => {
+          openingBgm.pause();
+        });
+      }
+
+      function fadeOutBgmForJourney(duration = bgmFadeOutMs) {
+        bgmRequested = false;
+        bgmManualPaused = false;
+        bgmAutoArmed = false;
+        if (openingBgm.paused) {
+          updateMusicToggle();
+          return;
+        }
+        fadeBgm(0, duration, () => {
+          openingBgm.pause();
+        });
+      }
+
+      window.NuoOpeningBridge = {
+        fadeOutBgmForJourney
+      };
+
+      function startBgmFromFirstInteraction(event) {
+        if (!bgmAutoArmed || bgmManualPaused || bgmRequested || eyeState === "final") return;
+        if (event.target.closest?.("#musicToggle")) return;
+        playBgm(true);
+      }
+
+      function startBgmOnLoad() {
+        if (bgmRequested || eyeState === "final") return;
+        playBgm(true);
+      }
+
+      function setState(next, motion) {
+        current = next;
+        body.dataset.state = next;
+        document.querySelectorAll(".figma-frame").forEach((frame) => {
+          frame.classList.toggle("is-active", frame.dataset.state === next);
+        });
+        document.querySelectorAll(".bottom-hint-frame").forEach((frame) => {
+          frame.classList.toggle("is-active", frame.dataset.hintState === next);
+        });
+
+        stateName.textContent = states[next].name;
+        stateHint.textContent = states[next].hint;
+        promptHotspot.hidden = !["door-closed", "door-open", "shot1", "shot2"].includes(next);
+        maskHotspot.hidden = next !== "shot3";
+        gestureFrame.classList.toggle("is-active", ["shot3", "shot4", "wear"].includes(next));
+
+        if (motion) {
+          stage.classList.remove("is-camera-shake", "is-walking");
+          requestAnimationFrame(() => {
+            stage.classList.add(motion);
+            window.setTimeout(() => stage.classList.remove(motion), motion === "is-walking" ? 1040 : 780);
+          });
+        }
+
+        if (next === "shot4") {
+          holdStartedAt = 0;
+          holdProgress = 0;
+          root.style.setProperty("--hold", "0");
+        }
+
+        if (next === "shot3") {
+          startGestureCamera();
+          warmWearModel();
+        }
+
+        if (next === "wear") {
+          wearStartedAt = performance.now();
+          wearDepth = 0;
+          eyeState = "idle";
+          delete body.dataset.eye;
+          wearBaseHandBoxSize = handBoxSize || 0;
+          root.style.setProperty("--blackout", "0");
+          initWearScene();
+        }
+      }
+
+      function advanceByPrompt() {
+        if (isTransitioning) return;
+        if (current === "door-closed") {
+          isTransitioning = true;
+          setState("door-ajar");
+          window.setTimeout(() => {
+            setState("door-open");
+            isTransitioning = false;
+          }, 1050);
+          return;
+        }
+        if (current === "door-open") {
+          setState("shot1", "is-camera-shake");
+          return;
+        }
+        if (current === "shot1") {
+          setState("shot2", "is-walking");
+          return;
+        }
+        if (current === "shot2") {
+          setState("shot3", "is-walking");
+        }
+      }
+
+      function updatePointer(event) {
+        if (controlMode === "hand" && performance.now() - lastHandSeenAt < 1600) return;
+        pointer.x = event.clientX ?? pointer.x;
+        pointer.y = event.clientY ?? pointer.y;
+        root.style.setProperty("--hand-x", `${pointer.x}px`);
+        root.style.setProperty("--hand-y", `${pointer.y}px`);
+      }
+
+      function pointIn(element, padding = 0) {
+        const rect = element.getBoundingClientRect();
+        return (
+          pointer.x >= rect.left - padding &&
+          pointer.x <= rect.right + padding &&
+          pointer.y >= rect.top - padding &&
+          pointer.y <= rect.bottom + padding
+        );
+      }
+
+      function tickHold(time) {
+        if (current !== "shot4") return;
+        const inside = pointIn(maskHotspot, 96) || pointIn(holdMeter, 40);
+        if (pointer.active && inside) {
+          if (!holdStartedAt) holdStartedAt = time;
+          holdProgress = Math.min(1, (time - holdStartedAt) / 2000);
+        } else {
+          holdStartedAt = 0;
+          holdProgress = Math.max(0, holdProgress - 0.022);
+        }
+
+        root.style.setProperty("--hold", holdProgress.toFixed(3));
+        if (holdProgress >= 1) setState("wear");
+      }
+
+      async function initWearScene() {
+        try {
+          await initThree();
+        } catch {
+          showModelFallback("GLB 加载失败，已显示实体面具兜底；请检查模型文件路径");
+        }
+        startGestureCamera();
+      }
+
+      async function warmWearModel() {
+        try {
+          await initThree();
+        } catch {
+          stateHint.textContent = "面具模型预加载暂未完成，进入戴面页后会继续加载";
+        }
+      }
+
+      function initMediaPipeHands() {
+        if (!window.Hands) {
+          stateHint.textContent = "MediaPipe Hands 暂不可用，请允许网络资源加载；当前保留鼠标兜底";
+          return false;
+        }
+        if (hands) return true;
+        hands = new Hands({
+          locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+        });
+        hands.setOptions({
+          maxNumHands: 1,
+          modelComplexity: 1,
+          minDetectionConfidence: 0.56,
+          minTrackingConfidence: 0.52
+        });
+        hands.onResults(onHandsResults);
+        return true;
+      }
+
+      async function startGestureCamera() {
+        if (cameraStarting) return;
+        if (stream && handTracking) return;
+        cameraStarting = true;
+        try {
+          if (!navigator.mediaDevices?.getUserMedia) {
+            stateHint.textContent = "当前浏览器不可用摄像头，已保留鼠标兜底";
+            return;
+          }
+          if (!initMediaPipeHands()) return;
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } },
+            audio: false
+          });
+          cameraVideo.srcObject = stream;
+          await cameraVideo.play();
+          handTracking = true;
+          requestAnimationFrame(processGestureFrame);
+        } catch {
+          cameraVideo.style.display = "none";
+          stateHint.textContent = "摄像头权限未开启，当前保留鼠标兜底";
+        } finally {
+          cameraStarting = false;
+        }
+      }
+
+      async function processGestureFrame() {
+        if (!handTracking) return;
+        if (cameraVideo.readyState >= 2 && !cameraVideo.paused && cameraVideo.currentTime !== lastVideoTime) {
+          lastVideoTime = cameraVideo.currentTime;
+          try {
+            await hands?.send({ image: cameraVideo });
+          } catch {
+            stateHint.textContent = "手势识别帧处理暂不可用，当前保留鼠标兜底";
+          }
+        }
+        requestAnimationFrame(processGestureFrame);
+      }
+
+      function onHandsResults(results) {
+        const hand = results.multiHandLandmarks?.[0];
+        if (!hand) {
+          pointer.active = false;
+          if (performance.now() - lastHandSeenAt > 1600 && current !== "wear") {
+            stateHint.textContent = states[current].hint;
+          }
+          return;
+        }
+
+        controlMode = "hand";
+        lastHandSeenAt = performance.now();
+        const cursor = getHandCursor(hand);
+        const nextScale = getHandScale(hand);
+        handBoxSize = getHandBoxSize(hand);
+        if (current === "wear" && !wearBaseHandBoxSize && handBoxSize) wearBaseHandBoxSize = handBoxSize;
+        pointer.x += (cursor.x - pointer.x) * 0.5;
+        pointer.y += (cursor.y - pointer.y) * 0.5;
+        handScale += (nextScale - handScale) * 0.34;
+        pointer.active = isGrabGesture(hand);
+        root.style.setProperty("--hand-x", `${pointer.x}px`);
+        root.style.setProperty("--hand-y", `${pointer.y}px`);
+        root.style.setProperty("--hand-scale", handScale.toFixed(3));
+
+        if (current === "shot3") {
+          stateHint.textContent = pointer.active ? "抓取手势已识别，触碰面具中心" : "请做抓取手势，移向画面中心面具";
+          if (pointer.active && pointIn(maskHotspot, 80)) setState("shot4", "is-camera-shake");
+        } else if (current === "shot4") {
+          stateHint.textContent = pointer.active ? "保持抓取手势停留" : "抓取手势松开，进度暂停";
+        } else if (current === "wear") {
+          stateHint.textContent = pointer.active ? "手势离镜头越远，面具背面越近" : "请保持抓取手势";
+        }
+      }
+
+      function getHandCursor(hand) {
+        const ids = [0, 5, 9, 13, 17];
+        const center = ids.reduce((acc, id) => {
+          acc.x += hand[id].x;
+          acc.y += hand[id].y;
+          return acc;
+        }, { x: 0, y: 0 });
+        center.x /= ids.length;
+        center.y /= ids.length;
+        return {
+          x: (1 - center.x) * innerWidth,
+          y: center.y * innerHeight
+        };
+      }
+
+      function getHandScale(hand) {
+        const boxSize = getHandBoxSize(hand);
+        const zDepth = Math.abs(hand[0]?.z || 0);
+        const sizeScale = 0.72 + boxSize * 3.4;
+        const zScale = zDepth > 0 ? Math.max(0.78, 1.22 - zDepth * 1.2) : 1;
+        return Math.max(0.68, Math.min(1.95, sizeScale * zScale));
+      }
+
+      function getHandBoxSize(hand) {
+        let minX = 1;
+        let minY = 1;
+        let maxX = 0;
+        let maxY = 0;
+        hand.forEach((point) => {
+          minX = Math.min(minX, point.x);
+          minY = Math.min(minY, point.y);
+          maxX = Math.max(maxX, point.x);
+          maxY = Math.max(maxY, point.y);
+        });
+        return Math.max(maxX - minX, maxY - minY);
+      }
+
+      function isGrabGesture(hand) {
+        const wrist = hand[0];
+        const tips = [8, 12, 16, 20];
+        const pips = [6, 10, 14, 18];
+        let curled = 0;
+        tips.forEach((tipId, index) => {
+          const tip = hand[tipId];
+          const pip = hand[pips[index]];
+          const tipDistance = Math.hypot(tip.x - wrist.x, tip.y - wrist.y);
+          const pipDistance = Math.hypot(pip.x - wrist.x, pip.y - wrist.y);
+          if (tipDistance < pipDistance * 1.08 || tip.y > pip.y + 0.018) curled += 1;
+        });
+        const thumbIndexDistance = Math.hypot(hand[4].x - hand[8].x, hand[4].y - hand[8].y);
+        return curled >= 3 || thumbIndexDistance < 0.075;
+      }
+
+      async function initThree() {
+        if (three) return three;
+        if (threeLoadingPromise) return threeLoadingPromise;
+        threeLoadingPromise = loadThreeScene().catch((error) => {
+          threeLoadingPromise = null;
+          modelLoadFailed = true;
+          showModelFallback("GLB 暂未加载成功，已显示实体面具兜底");
+          throw error;
+        });
+        return threeLoadingPromise;
+      }
+
+      async function loadThreeScene() {
+        modelLoadFailed = false;
+        setModelStatus("正在加载开山莽将 GLB 模型...");
+        if (!threeModules) {
+          const THREE = await import("three");
+          const { GLTFLoader } = await import("three/addons/loaders/GLTFLoader.js");
+          threeModules = { THREE, GLTFLoader };
+        }
+        const { THREE, GLTFLoader } = threeModules;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
+        camera.position.set(0, 0, 6.4);
+
+        const renderer = new THREE.WebGLRenderer({
+          canvas: modelCanvas,
+          antialias: true,
+          alpha: true,
+          powerPreference: "high-performance"
+        });
+        renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+        renderer.setClearColor(0x000000, 0);
+
+        const group = new THREE.Group();
+        scene.add(group);
+        scene.add(new THREE.AmbientLight(0x8a6440, 1.25));
+
+        const key = new THREE.DirectionalLight(0xffdfae, 3.4);
+        key.position.set(2.8, 4.2, 4.8);
+        scene.add(key);
+
+        const rim = new THREE.DirectionalLight(0x9a2d20, 1.6);
+        rim.position.set(-3.5, -0.6, 2.2);
+        scene.add(rim);
+
+        const loader = new GLTFLoader();
+        const gltf = await loader.loadAsync(
+          "assets/models/masks/guizhou-kaishan-mangjiang.glb",
+          (event) => {
+            if (!event.total) return;
+            const progress = Math.round((event.loaded / event.total) * 100);
+            setModelStatus(`正在加载开山莽将 GLB 模型... ${progress}%`);
+          }
+        );
+        group.add(gltf.scene);
+        normalizeModel(gltf.scene, THREE);
+        solidifyModel(gltf.scene, THREE);
+
+        three = { scene, camera, renderer, group };
+        resizeThree();
+        setModelStatus("");
+        modelFallback.classList.remove("is-visible");
+        return three;
+      }
+
+      function normalizeModel(object, THREE) {
+        const box = new THREE.Box3().setFromObject(object);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+        const maxAxis = Math.max(size.x, size.y, size.z) || 1;
+        object.position.sub(center);
+        object.scale.multiplyScalar(2.35 / maxAxis);
+      }
+
+      function solidifyModel(object, THREE) {
+        object.traverse((node) => {
+          if (!node.isMesh) return;
+          node.visible = true;
+          node.frustumCulled = false;
+          node.castShadow = false;
+          node.receiveShadow = false;
+          const materials = Array.isArray(node.material) ? node.material : [node.material];
+          materials.filter(Boolean).forEach((material) => {
+            material.transparent = false;
+            material.opacity = 1;
+            material.depthWrite = true;
+            material.depthTest = true;
+            material.side = THREE.DoubleSide;
+            material.needsUpdate = true;
+          });
+        });
+      }
+
+      function setModelStatus(text) {
+        modelStatus.textContent = text;
+        root.style.setProperty("--model-status-opacity", text ? "1" : "0");
+      }
+
+      function showModelFallback(text) {
+        setModelStatus(text);
+        modelFallback.classList.add("is-visible");
+      }
+
+      function resizeThree() {
+        if (!three) return;
+        const width = Math.max(1, modelCanvas.clientWidth);
+        const height = Math.max(1, modelCanvas.clientHeight);
+        three.camera.aspect = width / height;
+        three.camera.updateProjectionMatrix();
+        three.renderer.setSize(width, height, false);
+      }
+
+      function updateWearDepth() {
+        if (current !== "wear") return;
+        if (eyeState !== "idle") return;
+        let target = 0;
+        if (controlMode === "hand" && pointer.active && handBoxSize && wearBaseHandBoxSize) {
+          const farRatio = (wearBaseHandBoxSize - handBoxSize) / Math.max(0.001, wearBaseHandBoxSize * 0.5);
+          target = Math.max(0, Math.min(1, farRatio));
+        } else {
+          const faceX = innerWidth * 0.5;
+          const faceY = innerHeight * 0.4;
+          const distance = Math.hypot(pointer.x - faceX, pointer.y - faceY);
+          target = pointer.active ? Math.max(0, 1 - distance / Math.min(innerWidth, innerHeight) * 2.25) : 0;
+        }
+        wearDepth += (target - wearDepth) * 0.055;
+        if (wearDepth > 0.88) wearDepth = Math.min(1, wearDepth + 0.015);
+        const blackout = Math.max(0, (wearDepth - 0.18) / 0.72);
+        root.style.setProperty("--blackout", Math.min(1, blackout).toFixed(3));
+        if (wearDepth >= 0.985) enterEyeClosed();
+      }
+
+      function enterEyeClosed() {
+        if (eyeState !== "idle") return;
+        eyeState = "closed";
+        wearDepth = 1;
+        body.dataset.eye = "closed";
+        eyeHint.textContent = "点击睁眼";
+        root.style.setProperty("--blackout", "1");
+        stateHint.textContent = "面具已戴上，闭眼";
+      }
+
+      function openEyes() {
+        if (eyeState !== "closed") return;
+        eyeState = "open";
+        body.dataset.eye = "open";
+        eyeHint.textContent = "再次点击闭眼";
+        root.style.setProperty("--blackout", "0");
+        stateHint.textContent = "透过面具看向傩场";
+      }
+
+      function closeEyesFinal() {
+        if (eyeState !== "open") return;
+        eyeState = "final";
+        body.dataset.eye = "final";
+        eyeHint.textContent = "";
+        stateHint.textContent = "开场结束";
+        if (isJourneyMode) {
+          window.parent.postMessage({ type: "nuo-opening-complete" }, "*");
+        } else {
+          fadeOutBgmForEnding();
+        }
+        window.setTimeout(() => root.style.setProperty("--blackout", "1"), 500);
+      }
+
+      function renderThree(time) {
+        if (eyeState !== "idle") return;
+        if (!three) {
+          if (current === "wear") renderFallback(time);
+          return;
+        }
+        const elapsed = Math.max(0, (time - wearStartedAt) / 1000);
+        const turn = Math.min(1, elapsed / 2.4);
+        const easedTurn = 1 - Math.pow(1 - turn, 3);
+        const lockedWornView = false;
+        const scale = lockedWornView ? 6.2 : 1 + wearDepth * 3.9;
+        const idleSway = lockedWornView ? 0 : Math.sin(time * 0.0012) * 0.07 * (1 - wearDepth) * (1 - easedTurn);
+
+        three.group.rotation.y = (lockedWornView ? maskBackRotationY : easedTurn * maskBackRotationY) + idleSway;
+        three.group.rotation.x = lockedWornView ? 0.02 : -0.06 + wearDepth * 0.08;
+        three.group.position.set(0, lockedWornView ? -0.06 : -0.24 + wearDepth * 0.1, lockedWornView ? 1.62 : wearDepth * 1.36);
+        three.group.scale.setScalar(scale);
+        three.renderer.render(three.scene, three.camera);
+      }
+
+      function renderFallback(time) {
+        const elapsed = Math.max(0, (time - wearStartedAt) / 1000);
+        const turn = Math.min(1, elapsed / 2.4);
+        const easedTurn = 1 - Math.pow(1 - turn, 3);
+        const fallbackScale = 1 + wearDepth * 2.8;
+        modelFallback.style.setProperty("--fallback-rotate", `${easedTurn * 90}deg`);
+        modelFallback.style.setProperty("--fallback-scale", fallbackScale.toFixed(3));
+        if (!three && current === "wear") modelFallback.classList.add("is-visible");
+      }
+
+      function tick(time) {
+        tickHold(time);
+        updateWearDepth();
+        renderThree(time);
+        requestAnimationFrame(tick);
+      }
+
+      musicToggle.addEventListener("click", (event) => {
+        event.stopPropagation();
+        if (openingBgm.paused || !bgmRequested) playBgm(true);
+        else pauseBgm(true);
+      });
+      window.addEventListener("pointerdown", startBgmFromFirstInteraction, { capture: true, passive: true });
+      window.addEventListener("keydown", startBgmFromFirstInteraction, { capture: true });
+      openingBgm.addEventListener("play", updateMusicToggle);
+      openingBgm.addEventListener("pause", updateMusicToggle);
+      window.setTimeout(startBgmOnLoad, 360);
+
+      promptHotspot.addEventListener("click", advanceByPrompt);
+      maskHotspot.addEventListener("click", () => {
+        if (controlMode === "hand" && performance.now() - lastHandSeenAt < 1600) return;
+        setState("shot4", "is-camera-shake");
+      });
+      eyeOverlay.addEventListener("click", () => {
+        if (eyeState === "closed") openEyes();
+        else if (eyeState === "open") closeEyesFinal();
+      });
+
+      stage.addEventListener("click", (event) => {
+        if (event.target.closest(".hotspot")) return;
+        if (["door-closed", "door-open", "shot1", "shot2"].includes(current)) {
+          advanceByPrompt();
+        }
+      });
+
+      window.addEventListener("pointermove", updatePointer, { passive: true });
+      window.addEventListener("pointerdown", (event) => {
+        if (controlMode === "hand" && performance.now() - lastHandSeenAt < 1600) return;
+        pointer.active = true;
+        updatePointer(event);
+      });
+      window.addEventListener("pointerup", (event) => {
+        if (controlMode === "hand" && performance.now() - lastHandSeenAt < 1600) return;
+        pointer.active = false;
+        updatePointer(event);
+      });
+      window.addEventListener("resize", resizeThree);
+
+      requestAnimationFrame(tick);
+    </script>
+  </body>
+</html>

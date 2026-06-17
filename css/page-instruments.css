@@ -1,0 +1,618 @@
+body[data-page="instruments"] {
+  overflow: hidden;
+  background: linear-gradient(190deg, #070403 9%, #19100d 43%, #533e37 100%);
+}
+
+body[data-page="instruments"] .instrument-page {
+  height: calc(100vh - 72px);
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body[data-page="instruments"] .faqi-scene {
+  position: relative;
+  height: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  background: linear-gradient(190deg, #070403 9%, #19100d 43%, #533e37 100%);
+}
+
+body[data-page="instruments"] .faqi-scene::before {
+  content: none;
+}
+
+body[data-page="instruments"] .faqi-canvas-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+body[data-page="instruments"] .faqi-canvas-container canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+body[data-page="instruments"] .faqi-loading {
+  position: absolute;
+  z-index: 12;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  color: rgba(209, 183, 145, 0.86);
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-align: center;
+  text-shadow: 0 0 12px rgba(255, 111, 48, 0.78);
+  transform: translate(-50%, -50%);
+  transition: opacity 600ms ease, visibility 600ms ease;
+  pointer-events: none;
+}
+
+body[data-page="instruments"] .faqi-loading.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+body[data-page="instruments"] .faqi-stage {
+  position: relative;
+  z-index: 10;
+  width: min(100%, 1720px);
+  height: 100%;
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 0 clamp(18px, 4vw, 56px);
+  pointer-events: none;
+}
+
+body[data-page="instruments"] .interactive,
+body[data-page="instruments"] .faqi-info-card,
+body[data-page="instruments"] .faqi-card-backdrop {
+  pointer-events: auto;
+}
+
+body[data-page="instruments"] .faqi-title {
+  position: absolute;
+  left: clamp(18px, 4vw, 56px);
+  top: clamp(14px, 2.2vw, 26px);
+  z-index: 14;
+  margin: 0;
+  color: var(--color-platinum);
+  font-size: clamp(26px, 4vw, 48px);
+  font-weight: 400;
+  line-height: 1.05;
+  text-shadow: 0 0 20px rgba(255, 246, 221, 0.16), 0 0 30px rgba(240, 209, 138, 0.12);
+}
+
+body[data-page="instruments"] .faqi-artifact-images,
+body[data-page="instruments"] .faqi-artifact-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+body[data-page="instruments"] .faqi-artifact-images {
+  z-index: 11;
+}
+
+body[data-page="instruments"] .faqi-artifact-labels {
+  z-index: 13;
+}
+
+body[data-page="instruments"] .faqi-artifact-image {
+  position: absolute;
+  top: clamp(102px, 14.5vh, 146px);
+  width: min(17vw, 300px);
+  height: auto;
+  max-width: none;
+  max-height: none;
+  opacity: 1;
+  filter: blur(0) brightness(1) saturate(1) drop-shadow(0 0 18px rgba(250, 185, 144, 0.35));
+  transform: translateX(-50%) scale(1);
+  will-change: opacity, filter, transform;
+}
+
+body[data-page="instruments"].reveal-ready .faqi-artifact-image {
+  opacity: 0;
+  filter: blur(14px) brightness(0.08) saturate(0.7) drop-shadow(0 0 10px rgba(250, 185, 144, 0.08));
+  transform: translateX(-50%) translateY(6px) scale(0.965);
+}
+
+body[data-page="instruments"] .faqi-image-1 {
+  left: 11.8%;
+}
+
+body[data-page="instruments"] .faqi-image-2 {
+  left: 32.8%;
+}
+
+body[data-page="instruments"] .faqi-image-3 {
+  left: 51.3%;
+  top: calc(clamp(102px, 14.5vh, 146px) - 14px);
+  width: min(19vw, 330px);
+}
+
+body[data-page="instruments"] .faqi-image-4 {
+  left: 70.4%;
+}
+
+body[data-page="instruments"] .faqi-image-5 {
+  left: 89.2%;
+}
+
+body[data-page="instruments"] .faqi-vertical-label {
+  position: absolute;
+  top: clamp(396px, 61vh, 448px);
+  display: grid;
+  place-items: center;
+  width: 31px;
+  min-height: 87px;
+  padding: 4px 3px;
+  border: 1px solid #ff4848;
+  border-radius: 6px;
+  color: #d76542;
+  font-size: clamp(17px, 1.25vw, 24px);
+  line-height: 1.15;
+  letter-spacing: 0;
+  text-align: center;
+  text-orientation: upright;
+  writing-mode: vertical-rl;
+  background: linear-gradient(#eb744d, #9d4629);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 950ms ease, transform 950ms ease, filter 950ms ease;
+  filter: drop-shadow(0 0 0 rgba(255, 100, 72, 0));
+}
+
+body[data-page="instruments"].reveal-ready .faqi-vertical-label {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+body[data-page="instruments"].reveal-ready .faqi-vertical-label.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: drop-shadow(0 0 8px rgba(255, 100, 72, 0.32));
+}
+
+body[data-page="instruments"] .faqi-label-1 {
+  left: 3.1%;
+}
+
+body[data-page="instruments"] .faqi-label-2 {
+  left: 24.3%;
+}
+
+body[data-page="instruments"] .faqi-label-3 {
+  left: 43.6%;
+}
+
+body[data-page="instruments"] .faqi-label-4 {
+  left: 62.3%;
+}
+
+body[data-page="instruments"] .faqi-label-5 {
+  left: 81.7%;
+}
+
+body[data-page="instruments"] .faqi-intro-panel {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(54px, 7vh, 78px);
+  z-index: 12;
+  width: min(860px, calc(100vw - 340px));
+  color: rgba(229, 206, 173, 0.86);
+  font-size: 16px;
+  line-height: 1.55;
+  text-align: center;
+  text-shadow: 0 0 8px rgba(229, 206, 173, 0.42);
+  opacity: 0;
+  transform: translate(-50%, 16px);
+  transition: opacity 1300ms ease, transform 1300ms ease;
+  pointer-events: none;
+}
+
+body[data-page="instruments"] .faqi-intro-panel.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+body[data-page="instruments"] .faqi-intro-kicker,
+body[data-page="instruments"] .faqi-intro-panel p {
+  margin: 0;
+}
+
+body[data-page="instruments"] .faqi-intro-kicker {
+  margin-bottom: 4px;
+  color: #eb744d;
+  font-size: 16px;
+  letter-spacing: 4px;
+}
+
+body[data-page="instruments"] .instrument-next-button {
+  position: fixed;
+  right: 19px;
+  bottom: var(--figma-button-y);
+  z-index: 80;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 135px;
+  min-width: 135px;
+  height: 45px;
+  min-height: 45px;
+  padding: 0 15px;
+  border: 0;
+  border-radius: 0;
+  background:
+    url("../assets/images/ui/figma-next-button-bg.png") center / 100% 100% no-repeat,
+    linear-gradient(90deg, #fffef7 0%, #9f4d4d 100%);
+  color: #502c2b;
+  font-family: var(--font-heading);
+  font-size: 32px;
+  line-height: 1.15;
+  letter-spacing: -0.64px;
+  text-align: center;
+  text-decoration: none;
+  text-shadow: none;
+  cursor: pointer;
+  box-shadow: none;
+  overflow: hidden;
+  transform: none;
+  transition: filter 180ms ease, transform 180ms ease;
+}
+
+body[data-page="instruments"] .instrument-next-button:hover {
+  background:
+    url("../assets/images/ui/figma-next-button-bg.png") center / 100% 100% no-repeat,
+    linear-gradient(90deg, #fffef7 0%, #9f4d4d 100%);
+  color: #502c2b;
+  box-shadow: 0 0 18px rgba(255, 254, 247, 0.24);
+  filter: brightness(1.05) saturate(1.04);
+  transform: translateY(-1px);
+}
+
+body[data-page="instruments"] .instrument-next-button:focus-visible {
+  outline: 1px solid rgba(255, 254, 247, 0.7);
+  outline-offset: 3px;
+}
+
+body[data-page="instruments"] .faqi-card-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 24;
+  background: rgba(7, 4, 3, 0.34);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 260ms ease, visibility 260ms ease;
+}
+
+body[data-page="instruments"].card-open .faqi-card-backdrop {
+  opacity: 1;
+  visibility: visible;
+}
+
+body[data-page="instruments"] .faqi-info-card {
+  position: absolute;
+  z-index: 30;
+  left: 50%;
+  top: 50%;
+  width: 431px;
+  height: 681px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -45%) scale(0.96);
+  transition: opacity 320ms ease, transform 320ms ease, visibility 320ms ease;
+}
+
+body[data-page="instruments"].card-open .faqi-info-card {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+body[data-page="instruments"] .faqi-card-close {
+  position: absolute;
+  top: 0;
+  right: 27px;
+  z-index: 4;
+  width: 85px;
+  height: 27px;
+  padding-left: 8px;
+  border: 0;
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(180deg, #be8a8a 0%, #6a5959 100%);
+  color: #5c110f;
+  font-size: 15px;
+  line-height: 27px;
+  letter-spacing: 8.1px;
+  text-align: center;
+  text-indent: 8.1px;
+  cursor: pointer;
+}
+
+body[data-page="instruments"] .faqi-card-shell {
+  position: absolute;
+  left: 0;
+  top: 27px;
+  width: 431px;
+  height: 654px;
+  overflow: hidden;
+  border: 11px solid #695a5a;
+  border-radius: 21px;
+  background: rgba(0, 0, 0, 0.9);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.38);
+}
+
+body[data-page="instruments"] .faqi-card-hero {
+  position: absolute;
+  left: 35px;
+  top: 52px;
+  z-index: 2;
+  width: 342px;
+  height: 205px;
+  overflow: hidden;
+  filter: drop-shadow(0 4px 47px rgba(208, 154, 154, 0.37));
+}
+
+body[data-page="instruments"] .faqi-card-hero img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 323px;
+  height: 205px;
+  max-width: none;
+  object-fit: contain;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 26px rgba(250, 185, 144, 0.25));
+}
+
+body[data-page="instruments"] .faqi-card-person {
+  position: absolute;
+  z-index: 1;
+  width: 340px;
+  max-width: none;
+  filter: drop-shadow(0 0 30px rgba(250, 185, 144, 0.31));
+  pointer-events: none;
+}
+
+body[data-page="instruments"] .faqi-card-text {
+  position: absolute;
+  left: 35px;
+  top: 316px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 342px;
+  color: rgba(229, 206, 173, 0.96);
+  text-align: center;
+  word-break: break-word;
+}
+
+body[data-page="instruments"] .faqi-card-text h2 {
+  margin: 0 0 18px;
+  width: 100%;
+  height: 37px;
+  color: rgba(229, 206, 173, 0.96);
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 37px;
+  text-align: center;
+}
+
+body[data-page="instruments"] .faqi-card-region {
+  margin: 0;
+  width: 100%;
+  color: #d1ac8b;
+  font-size: 15px;
+  line-height: 1.35;
+  letter-spacing: 8.1px;
+  text-align: center;
+}
+
+body[data-page="instruments"] .faqi-card-meaning {
+  width: 100%;
+  margin-top: 22px;
+  padding: 7px 23px;
+  background: rgba(253, 232, 232, 0.06);
+  color: rgba(229, 206, 173, 0.96);
+  font-size: 16px;
+  line-height: 1.36;
+  letter-spacing: 1.76px;
+  text-align: left;
+}
+
+body[data-page="instruments"] .faqi-meaning-title {
+  margin: 0 0 4px;
+  color: #d1ac8b;
+  text-align: center;
+}
+
+body[data-page="instruments"] .faqi-card-meaning p:last-child {
+  margin: 0;
+}
+
+body[data-page="instruments"] .faqi-card-quote {
+  margin: 24px 0 0;
+  width: 100%;
+  color: #d1ac8b;
+  font-size: 20px;
+  line-height: 30px;
+  letter-spacing: 2.2px;
+  text-align: center;
+}
+
+body[data-page="instruments"] .faqi-info-card[data-active-id="faqi1"] .faqi-card-person {
+  left: -172px;
+  top: -82px;
+  width: 365px;
+  transform: rotate(33deg);
+}
+
+body[data-page="instruments"] .faqi-info-card[data-active-id="faqi1"] .faqi-card-hero img {
+  width: 390px;
+  height: 245px;
+  transform: translate(-51%, -48%) rotate(-5deg);
+}
+
+body[data-page="instruments"] .faqi-info-card[data-active-id="faqi2"] .faqi-card-person {
+  left: -115px;
+  top: -17px;
+  width: 299px;
+}
+
+body[data-page="instruments"] .faqi-info-card[data-active-id="faqi2"] .faqi-card-hero img {
+  width: 245px;
+  height: 185px;
+  transform: translate(-50%, -50%);
+}
+
+body[data-page="instruments"] .faqi-info-card[data-active-id="faqi3"] .faqi-card-person {
+  left: 228px;
+  top: -28px;
+  width: 340px;
+}
+
+body[data-page="instruments"] .faqi-info-card[data-active-id="faqi3"] .faqi-card-hero img {
+  width: 342px;
+  height: 205px;
+  transform: translate(-50%, -45%);
+}
+
+body[data-page="instruments"] .faqi-info-card[data-active-id="faqi4"] .faqi-card-person {
+  left: 226px;
+  top: -11px;
+  width: 301px;
+}
+
+body[data-page="instruments"] .faqi-info-card[data-active-id="faqi4"] .faqi-card-hero img {
+  width: 250px;
+  height: 205px;
+  transform: translate(-48%, -50%);
+}
+
+body[data-page="instruments"] .faqi-info-card[data-active-id="faqi5"] .faqi-card-person {
+  left: -112px;
+  top: 8px;
+  width: 293px;
+}
+
+body[data-page="instruments"] .faqi-info-card[data-active-id="faqi5"] .faqi-card-hero img {
+  width: 220px;
+  height: 190px;
+  transform: translate(-50%, -50%);
+}
+
+body[data-page="instruments"] .faqi-info-card[data-active-id="faqi3"] .faqi-card-text,
+body[data-page="instruments"] .faqi-info-card[data-active-id="faqi5"] .faqi-card-text {
+  top: 310px;
+}
+
+body[data-page="instruments"] .faqi-info-card[data-active-id="faqi3"] .faqi-card-meaning,
+body[data-page="instruments"] .faqi-info-card[data-active-id="faqi5"] .faqi-card-meaning,
+body[data-page="instruments"] .faqi-info-card[data-active-id="faqi3"] .faqi-card-quote,
+body[data-page="instruments"] .faqi-info-card[data-active-id="faqi5"] .faqi-card-quote {
+  margin-top: 16px;
+}
+
+@media (max-width: 900px) {
+  body[data-page="instruments"] .faqi-stage {
+    padding: 0 18px;
+  }
+
+  body[data-page="instruments"] .faqi-title {
+    left: clamp(18px, 4vw, 56px);
+    top: clamp(14px, 2.2vw, 26px);
+  }
+
+  body[data-page="instruments"] .faqi-artifact-image {
+    top: clamp(92px, 19vh, 144px);
+    width: min(31vw, 205px);
+    height: auto;
+    max-height: none;
+  }
+
+  body[data-page="instruments"] .faqi-image-1 {
+    left: 10%;
+  }
+
+  body[data-page="instruments"] .faqi-image-2 {
+    left: 31%;
+  }
+
+  body[data-page="instruments"] .faqi-image-3 {
+    left: 50%;
+    top: calc(clamp(92px, 19vh, 144px) - 10px);
+    width: min(35vw, 235px);
+    max-height: none;
+  }
+
+  body[data-page="instruments"] .faqi-image-4 {
+    left: 69%;
+  }
+
+  body[data-page="instruments"] .faqi-image-5 {
+    left: 90%;
+  }
+
+  body[data-page="instruments"] .faqi-vertical-label {
+    top: auto;
+    bottom: clamp(98px, 17vh, 124px);
+    width: 28px;
+    min-height: 78px;
+  }
+
+  body[data-page="instruments"] .faqi-label-1 {
+    left: 4%;
+  }
+
+  body[data-page="instruments"] .faqi-label-2 {
+    left: 23%;
+  }
+
+  body[data-page="instruments"] .faqi-label-3 {
+    left: 42%;
+  }
+
+  body[data-page="instruments"] .faqi-label-4 {
+    left: 61%;
+  }
+
+  body[data-page="instruments"] .faqi-label-5 {
+    left: 80%;
+  }
+
+  body[data-page="instruments"] .faqi-intro-panel {
+    bottom: 52px;
+    width: calc(100vw - 36px);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  body[data-page="instruments"] .instrument-next-button {
+    right: 14px;
+    bottom: var(--figma-button-y);
+    width: min(135px, calc(100vw - 32px));
+    min-width: 0;
+  }
+
+  body[data-page="instruments"] .faqi-info-card {
+    left: 50%;
+    top: 50%;
+    width: 431px;
+    height: 681px;
+    transform: translate(-50%, -45%) scale(0.78);
+    transform-origin: center;
+  }
+
+  body[data-page="instruments"].card-open .faqi-info-card {
+    transform: translate(-50%, -50%) scale(0.78);
+  }
+}

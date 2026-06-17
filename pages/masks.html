@@ -1,0 +1,47 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>傩场 NuoField | 面中诸神</title>
+    <link rel="stylesheet" href="../css/base.css" /><link rel="stylesheet" href="../css/layout.css" /><link rel="stylesheet" href="../css/effects.css" /><link rel="stylesheet" href="../css/pages.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "../assets/vendor/three/build/three.module.js"
+        }
+      }
+    </script>
+  </head>
+  <body data-root=".." data-page="masks">
+    <canvas id="particleCanvas" class="particle-canvas" aria-hidden="true"></canvas>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="../home.html"><span class="brand-mark"></span><span>傩场</span></a>
+        <nav class="site-nav" aria-label="主流程导航">
+          <a href="origin.html" data-route="origin">溯源</a><a href="three-senses.html" data-route="three-senses">三感</a><a href="masks.html" data-route="masks">诸神</a><a href="choose-mask.html" data-route="choose-mask">择面</a><a href="craft-mask.html" data-route="craft-mask">制面</a><a href="wear-mask.html" data-route="wear-mask">戴面</a><a href="gestures.html" data-route="gestures">手诀</a><a href="instruments.html" data-route="instruments">法器</a><a href="music.html" data-route="music">傩乐</a><a href="summary.html" data-route="summary">传承</a>
+        </nav>
+      </header>
+      <main class="page-main">
+        <div class="page-title-row">
+          <div><h1>面中诸神</h1></div>
+        </div>
+        <section class="masks-god-stage" id="maskStage" aria-label="八相傩面角色预览">
+          <div class="masks-stage-bg" aria-hidden="true"></div>
+          <div class="masks-cloud-field" id="maskClouds" aria-hidden="true"></div>
+          <canvas class="mask-orbit-canvas" id="maskOrbitCanvas" aria-hidden="true"></canvas>
+          <button class="mask-stage-arrow mask-stage-arrow-prev" id="maskPrev" type="button" aria-label="上一个角色"></button>
+          <div class="mask-stage-viewport" id="maskCarouselViewport">
+            <div class="mask-role-track" id="maskGrid"></div>
+          </div>
+          <button class="mask-stage-arrow mask-stage-arrow-next" id="maskNext" type="button" aria-label="下一个角色"></button>
+          <a class="ritual-button mask-stage-enter" id="enterChooseMask" href="choose-mask.html" aria-label="进入择面入戏">下一步</a>
+        </section>
+        <section class="mask-info-overlay" id="maskDetail" aria-live="polite" aria-hidden="true"></section>
+      </main>
+    </div>
+    <button class="audio-toggle" type="button" aria-label="背景音乐开关">乐</button>
+    <script src="../js/data.js"></script><script src="../js/state.js"></script><script src="../js/router.js"></script><script src="../js/audio.js"></script><script src="../js/cursor-particles.js"></script><script src="../js/app.js"></script><script type="module" src="../js/page-masks.js"></script>
+  </body>
+</html>
+
