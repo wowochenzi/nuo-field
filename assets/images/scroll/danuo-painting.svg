@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" role="img" aria-label="大傩图画卷占位">
+  <defs>
+    <linearGradient id="paper" x1="0" x2="1">
+      <stop offset="0" stop-color="#21160f"/>
+      <stop offset="0.5" stop-color="#473321"/>
+      <stop offset="1" stop-color="#160f0b"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="46%" r="58%">
+      <stop offset="0" stop-color="#d8a04a" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="520" fill="#050403"/>
+  <rect x="60" y="70" width="1080" height="380" rx="12" fill="url(#paper)" stroke="#d8c08a" stroke-opacity="0.38"/>
+  <rect x="60" y="70" width="1080" height="380" rx="12" fill="url(#glow)"/>
+  <g fill="none" stroke="#e5cead" stroke-opacity="0.45" stroke-width="3">
+    <path d="M160 330c70-75 130-82 190-4 65-92 145-105 230-22 70-72 145-76 224-5 54-64 116-70 184-18"/>
+    <path d="M210 188h760M210 224h660M210 260h720"/>
+  </g>
+  <g fill="#d8a04a" opacity="0.74">
+    <circle cx="268" cy="318" r="10"/>
+    <circle cx="514" cy="284" r="10"/>
+    <circle cx="812" cy="310" r="10"/>
+  </g>
+  <text x="600" y="396" text-anchor="middle" fill="#e8dcc5" fill-opacity="0.72" font-size="34" font-family="serif">宋代傩仪图像线索占位</text>
+</svg>
