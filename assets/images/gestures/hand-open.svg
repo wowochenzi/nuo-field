@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" role="img" aria-label="张手手势">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#fff6dd" stop-opacity=".2"/>
+      <stop offset="42%" stop-color="#f0d18a" stop-opacity=".13"/>
+      <stop offset="100%" stop-color="#060606" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hand" x1="78" y1="30" x2="144" y2="184">
+      <stop offset="0%" stop-color="#fff6dd"/>
+      <stop offset="56%" stop-color="#d8b36a"/>
+      <stop offset="100%" stop-color="#654526"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 1 0 0.82 0 0 0.74 0 0 0.46 0 0 0 0 0 .68 0"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="220" height="220" fill="#080806"/>
+  <circle cx="110" cy="110" r="92" fill="url(#bg)"/>
+  <g fill="none" stroke="#d8b36a" stroke-opacity=".38" stroke-width="1">
+    <ellipse cx="110" cy="151" rx="78" ry="16"/>
+    <ellipse cx="110" cy="151" rx="60" ry="10"/>
+    <circle cx="110" cy="112" r="70" stroke-dasharray="3 8"/>
+  </g>
+  <g filter="url(#glow)">
+    <path d="M84 178c-6-24-5-47 1-70L72 74c-4-10 11-17 17-6l13 30 2-56c1-13 18-13 19 0l2 51 11-50c3-12 19-9 18 3l-6 52 21-34c6-9 20-1 16 9l-22 54c13-8 25 1 18 12-9 15-24 25-38 38z" fill="url(#hand)" opacity=".88"/>
+    <path d="M91 172c-5-21-3-43 4-65m7-8 3-55m20 49 10-49m14 55 18-30m-67 71c18 15 41 13 59-4m-55-5c12 8 27 8 42 1m-21-37c-2 22-2 39-1 54" stroke="#fff6dd" stroke-opacity=".68" stroke-width="3" stroke-linecap="round"/>
+    <path d="M86 108c14 0 25 6 31 17m14-17c-8 8-10 21-8 39" stroke="#fff6dd" stroke-opacity=".42" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <g fill="#f0d18a" opacity=".8">
+    <circle cx="46" cy="50" r="1.2"/><circle cx="174" cy="54" r="1.2"/><circle cx="190" cy="148" r="1.1"/><circle cx="34" cy="152" r="1"/>
+  </g>
+</svg>
