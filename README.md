@@ -6,6 +6,9 @@
 
 本项目涉及摄像头权限、GLB 模型加载、音频播放和跨页面资源引用，建议通过本地服务器预览，不要直接双击打开 HTML。
 
+公开预览地址是：
+https://wowochenzi.github.io/nuo-field/
+
 在本文件夹内运行：
 
 ```powershell
